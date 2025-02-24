@@ -8,14 +8,23 @@ export default {
   theme: {
     extend: {
       colors: {
-        lightHover: '#aeb6f1',
-        darkHover: '#8193e9',
-        'orange-0': '#fcb34d',
-        'orange-1': '#f9aa33',
-        'orange-2': '#ffbd65',
-        'gray-0': '#4a6572',
-        'gray-1': '#344955',
-        'gray-2': '#232f34',
+        'primary': '#bb86fc',
+        'primary-variant': '#3700b3',
+        'secondary': '#03dac6',
+        'background': '#121212',
+        'surface': '#282828',
+        'surface-light': '#3f3f3f',
+        'error': '#cf6679',
+        'on-primary': '#000000',
+        'on-secondary': '#000000',
+        'on-background': '#ffffff',
+        'on-surface': '#ffffff',
+        'on-error': '#000000',
+      },
+      textOpacity: {
+        '87': '0.87',
+        '60': '0.60',
+        '38': '0.38',
       },
       fontFamily: {
         Outfit: ["Outfit", "sans-serif"],
