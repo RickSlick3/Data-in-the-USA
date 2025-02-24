@@ -1,12 +1,8 @@
-'use client'
-import Layout from "./components/Layout";
-
 export default function Home() {
   return (
-    <>
-    <Layout>
-      
-    </Layout>
-    </>
+    <div>
+      <h1 className="text-2xl font-bold mb-4">Documentation</h1>
+      <p>This is the Documentation page. Put your docs here.</p>
+    </div>
   );
 }

@@ -1,5 +1,6 @@
 import { Outfit, Ovo } from "next/font/google";
 import "./globals.css";
+import Menu from "./components/Menu";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -22,7 +23,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${outfit.className} ${ovo.className} antialiased leading-8 overflow-x-hidden`}
       >
-        {children}
+        <Menu>
+          {children}
+        </Menu>
       </body>
     </html>
   );
