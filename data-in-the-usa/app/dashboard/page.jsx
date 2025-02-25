@@ -60,19 +60,18 @@ const Dashboard = () => {
         };
     }, []);
 
-    function filterData() {
-        if (difficultyFilter.length == 0) {
-            scatterplot.data = data;
-        } else {
-            scatterplot.data = data.filter(d => difficultyFilter.includes(d.difficulty));
-        }
-        scatterplot.updateVis();
-    }
+    // function filterData() {
+    //     if (difficultyFilter.length == 0) {
+    //         scatterplot.data = data;
+    //     } else {
+    //         scatterplot.data = data.filter(d => difficultyFilter.includes(d.difficulty));
+    //     }
+    //     scatterplot.updateVis();
+    // }
 
     return (
         <div>
             <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-            <p>This is the Dashboard page.</p>
             {/* This is where the D3 chart will be rendered */}
             <svg className='bg-on-surface' id="scatterplot"></svg>
         </div>
