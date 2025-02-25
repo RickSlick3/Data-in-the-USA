@@ -13,7 +13,6 @@ const Dashboard = () => {
             .then(_data => {
                 data = _data;
                 console.log('Data loading complete. Work with dataset.');
-                console.log(data);
 
                 // Convert relevant columns to numbers
                 data.forEach(d => {
@@ -26,7 +25,7 @@ const Dashboard = () => {
             
                 // Initialize scales
                 const colorScale = d3.scaleOrdinal()
-                    .range(['#ff0000', '#ffa500', '#ffff00', '#008000']) // ROYG, BIV = 0000ff, 4b0082, ee82ee
+                    .range(['#ff0000', '#ffa500', '#0000ff', '#008000']) // ROBG, YIV = ffff00, 4b0082, ee82ee
                     .domain(['percent_high_cholesterol', 'percent_stroke', 'percent_coronary_heart_disease', 'percent_high_blood_pressure']); // percent_smoking, percent_no_heath_insurance
                 
                 // filter out rows with -1 in any relevant column
@@ -41,6 +40,8 @@ const Dashboard = () => {
                 const newData = data.filter(d => {
                     return columnsToCheck.every(col => d[col] !== -1);
                 });
+
+                console.log(newData);
 
                 scatterplot = new Scatterplot({ 
                     parentElement: '#scatterplot',
@@ -74,6 +75,7 @@ const Dashboard = () => {
             <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
             {/* This is where the D3 chart will be rendered */}
             <svg className='bg-on-surface' id="scatterplot"></svg>
+            <div id="tooltip"></div>
         </div>
     );
 };

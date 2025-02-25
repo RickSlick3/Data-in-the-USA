@@ -91,7 +91,7 @@ class Scatterplot {
         let vis = this;
 
         // Transform the data from wide to long format
-        const metrics = [
+        const cols = [
             'percent_high_cholesterol', 
             'percent_stroke', 
             'percent_coronary_heart_disease', 
@@ -99,20 +99,18 @@ class Scatterplot {
         ];
         
         vis.data = vis.data.flatMap(d =>
-            metrics.map(metric => ({
+            cols.map(col => ({
+                display_name: d.display_name,
                 median_household_income: +d.median_household_income,
-                metric: metric,
-                value: +d[metric]
+                col: col,
+                value: +d[col]
             }))
         );
     
         // Specificy accessor functions
-        // vis.colorValue = d => d.???;
-        // vis.xValue = d => d.median_household_income;
-        // vis.yValue = d => d.???;
         vis.xValue = d => d.median_household_income;
         vis.yValue = d => d.value;
-        vis.colorValue = d => d.metric;
+        vis.colorValue = d => d.col;
 
         // Set the scale input domains
         vis.xScale.domain([0, d3.max(vis.data, vis.xValue)]);
@@ -140,19 +138,15 @@ class Scatterplot {
         // Tooltip event listeners
         circles
             .on('mouseover', (event,d) => {
+                // console.log(d); // log data in tooltip
                 d3.select('#tooltip')
                     .style('display', 'block')
                     .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')   
                     .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
                     .html(`
                         <div class="tooltip-title">${d.display_name}</div>
-                        <div><i>${d.median_household_income}</i></div>
-                        <ul>
-                            <li>${d.percent_high_cholesterol}</li>
-                            <li>${d.percent_stroke}</li>
-                            <li>${d.percent_coronary_heart_disease}</li>
-                            <li>${d.percent_high_blood_pressure}</li>
-                        </ul>
+                        <div><i>Median Household Income: $${d.median_household_income}</i></div>
+                        <div><i>${d.col}: ${d.value}%</i></div>
                     `);
             })
             .on('mouseleave', () => {
