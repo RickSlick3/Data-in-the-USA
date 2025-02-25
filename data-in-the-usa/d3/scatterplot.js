@@ -11,8 +11,9 @@ class Scatterplot {
         this.config = {
             parentElement: _config.parentElement,
             colorScale: _config.colorScale,
+            filter: _config.filter,
             containerWidth: _config.containerWidth || 500,
-            containerHeight: _config.containerHeight || 500,
+            containerHeight: _config.containerHeight || 300,
             margin: _config.margin || {top: 25, right: 20, bottom: 20, left: 35},
             tooltipPadding: _config.tooltipPadding || 15
         }
@@ -81,7 +82,7 @@ class Scatterplot {
             .attr('x', 0)
             .attr('y', 0)
             .attr('dy', '.71em')
-            .text('Percent People with Cardiovascular Disease');
+            .text('Percent People with Health Issue');
     }
 
     /**
@@ -92,10 +93,10 @@ class Scatterplot {
 
         // Transform the data from wide to long format
         const cols = [
-            'percent_high_cholesterol', 
+            // 'percent_high_cholesterol', 
             'percent_stroke', 
-            'percent_coronary_heart_disease', 
-            'percent_high_blood_pressure'
+            // 'percent_coronary_heart_disease', 
+            // 'percent_high_blood_pressure'
         ];
         
         vis.data = vis.data.flatMap(d =>
