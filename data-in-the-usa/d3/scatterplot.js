@@ -46,7 +46,7 @@ class Scatterplot {
             .ticks(6)
             .tickSize(-vis.width - 10)
             .tickPadding(10)
-            .tickFormat(d => d);
+            .tickFormat(d => d + '%');
 
         // Define size of SVG drawing area
         vis.svg = d3.select(vis.config.parentElement)
