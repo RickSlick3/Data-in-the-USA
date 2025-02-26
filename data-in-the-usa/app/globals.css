@@ -32,7 +32,7 @@
 /* Choroplet Map Styles */
 #state-borders {
   fill: none;
-  stroke: #fff;
+  stroke: #bcbcbc;
   stroke-width: 0.5px;
   stroke-linejoin: round;
   stroke-linecap: round;
@@ -59,14 +59,14 @@
 
 /* in style/style.css */
 /* Legend */
-/* .legend {
+.legend {
   margin: 20px 0;
   list-style: none;
   padding: 0;
 }
 .legend-btn {
   display: inline-block;
-  margin: 0 20px 0 0;
+  /* margin: 0 20px 0 0; */
   cursor: pointer;
   transition: all ease-in-out 200ms;
 }
@@ -76,21 +76,21 @@
 .legend-btn.inactive {
   opacity: 0.5;
 }
-.legend-symbol {
+/* .legend-symbol {
   width: 12px;
   height: 12px;
   margin-right: 3px;
   display: inline-block;
-}
-.legend-btn[col="percent_high_cholesterol"] .legend-symbol {
+} */
+/* .legend-btn[col="phc"] .legend-symbol {
   background: #ff0000;
 }
-.legend-btn[col="percent_stroke"] .legend-symbol {
+.legend-btn[col="ps"] .legend-symbol {
   background: #ffa500;
 }
-.legend-btn[col="percent_coronary_heart_disease"] .legend-symbol {
+.legend-btn[col="pchd"] .legend-symbol {
   background: #0000ff;
 }
-.legend-btn[col="percent_high_blood_pressure"] .legend-symbol {
+.legend-btn[col="phbp"] .legend-symbol {
   background: #008000;
 } */

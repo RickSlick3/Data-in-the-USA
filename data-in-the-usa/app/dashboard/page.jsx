@@ -1,37 +1,45 @@
 'use client'
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import * as d3 from 'd3';
 import Scatterplot from '@/d3/scatterplot';
 import Histplot from '@/d3/histplot';
 import ChoroplethMap from '@/d3/choroplethMap';
 
 const Dashboard = () => {
-    let colFilter = [];
-    let data, scatterplot, histplot;
+    const scatterplotRef = useRef(null);
+    const histplotRef = useRef(null);
+    const choroplethRef = useRef(null);
+    const dataRef = useRef(null);
 
+    const [activeCol, setActiveCol] = useState("percent_stroke");
+    const singleGreen = '#00700b';
 
     useEffect(() => {
         d3.csv('/data/cdc.csv').then(_data => {
-            data = cleanData(_data);
+            dataRef.current = cleanData(_data);
             console.log('Data loading complete. Work with dataset.');
 
             // Initialize color scale
             const colorScale = d3.scaleOrdinal()
-                .range(['#ff0000', '#ffa500', '#0000ff', '#008000']) // ROBG, YIV = ffff00, 4b0082, ee82ee
+                .range([singleGreen])
                 .domain(['percent_high_cholesterol', 'percent_stroke', 'percent_coronary_heart_disease', 'percent_high_blood_pressure']); // percent_smoking, percent_no_heath_insurance
 
-            scatterplot = new Scatterplot({ 
+            scatterplotRef.current = new Scatterplot({ 
                 parentElement: '#scatterplot',
                 colorScale: colorScale,
-                filter: colFilter
-            }, data);
-            scatterplot.updateVis();
+                // filter: colFilter,
+                containerWidth: 300,
+                containerHeight: 200
+            }, dataRef.current);
+            scatterplotRef.current.updateVis();
 
-            histplot = new Histplot({
+            histplotRef.current = new Histplot({
                 parentElement: '#histplot',
-                colorScale: colorScale
-            }, data);
-            histplot.updateVis();
+                colorScale: colorScale,
+                containerWidth: 300,
+                containerHeight: 300
+            }, dataRef.current);
+            histplotRef.current.updateVis();
         })
         .catch(error => console.error(error));
         
@@ -43,28 +51,19 @@ const Dashboard = () => {
             const geoData = data[0];
             const cdcData = data[1];
         
-            // Combine both datasets by adding the population density to the TopoJSON file
-            console.log(geoData);
-            geoData.objects.counties.geometries.forEach(d => {
-                // console.log(d);  
-                for (let i = 0; i < cdcData.length; i++) {
-                    if (d.id === cdcData[i].cnty_fips) {
-                        // assign a new property to d to use in the map
-                        d.properties.percent_stroke = +cdcData[i].percent_stroke;
-                    }
-                }
-            });
-        
-            const choroplethMap = new ChoroplethMap({ 
-                parentElement: '.choropleth-map',   
-            }, geoData);
+            if (!choroplethRef.current) {
+                choroplethRef.current = new ChoroplethMap({ 
+                    parentElement: '.choropleth-map',  
+                }, geoData, cdcData);
+                choroplethRef.current.updateVis();
+            }
         })
         .catch(error => console.error(error));
 
         return () => {
+            d3.select('#map').select('svg').remove();
             d3.select('#scatterplot').select('svg').remove();
             d3.select('#histplot').select('svg').remove();
-            d3.select('#map').select('svg').remove();
         };
     }, []);
 
@@ -95,38 +94,54 @@ const Dashboard = () => {
     }
 
 
-    function filterColumns(colName) {
-        const index = colFilter.indexOf(colName)
-        index === -1 ? colFilter.push(colName) : colFilter.splice(index, 1);
+    function changeColumn(colName) {
+        // const index = colFilter.indexOf(colName)
+        // index === -1 ? colFilter.push(colName) : colFilter.splice(index, 1);
         // if (colFilter.length == 0) {
         //     scatterplot.data = data;
         // } else {
         //     scatterplot.data = data.filter(d => difficultyFilter.includes(d.difficulty));
         // }
-        scatterplot.updateVis();
+        if (activeCol != colName){
+            console.log('changing columns')
+            setActiveCol(colName);
+            if (scatterplotRef.current && histplotRef.current && choroplethRef.current) {
+                scatterplotRef.current.colName = colName;
+                scatterplotRef.current.data = dataRef.current;
+                scatterplotRef.current.updateVis();
+
+                histplotRef.current.colName = colName;
+                histplotRef.current.data = dataRef.current;
+                histplotRef.current.updateVis();
+
+                choroplethRef.current.colName = colName;
+                choroplethRef.current.updateVis();
+            }
+        }
     }
 
 
     return (
         <div>
-            <h1 className="text-2xl font-bold mb-4">Health's Relationship with Wealth</h1>
+            <h1 className="text-2xl font-bold font-Outfit mb-4">Health's Relationship with Wealth</h1>
             {/* This is where the D3 chart will be rendered */}
 
-            {/* <ul className="legend">
-                <li className="legend-btn" col="percent_high_cholesterol"><span className="legend-symbol"></span>High Cholesterol</li>
-                <li className="legend-btn" col="percent_stroke"><span className="legend-symbol"></span>Stroke</li>
-                <li className="legend-btn" col="percent_coronary_heart_disease"><span className="legend-symbol"></span>Coranary Heart Disease</li>
-                <li className="legend-btn" col="percent_high_blood_pressure"><span className="legend-symbol"></span>High Blood Pressure</li>
-            </ul> */}
+            <ul className="legend flex gap-2">
+                <span className='font-bold text-xl'>Columns:</span>
+                <li className={`legend-btn border px-1 ${activeCol == "percent_high_cholesterol" ? 'bg-[#bbb]' : ''}`} col="phc" onClick={() => {changeColumn("percent_high_cholesterol");}}>High Cholesterol</li>
+                <li className={`legend-btn border px-1 ${activeCol == "percent_stroke" ? 'bg-[#bbb]' : ''}`} col="ps" onClick={() => {changeColumn("percent_stroke");}}>Stroke</li>
+                <li className={`legend-btn border px-1 ${activeCol == "percent_coronary_heart_disease" ? 'bg-[#bbb]' : ''}`} col="pchd" onClick={() => {changeColumn("percent_coronary_heart_disease");}}>Coranary Heart Disease</li>
+                <li className={`legend-btn border px-1 ${activeCol == "percent_high_blood_pressure" ? 'bg-[#bbb]' : ''}`} col="phbp" onClick={() => {changeColumn("percent_high_blood_pressure");}}>High Blood Pressure</li>
+            </ul>
 
-            <div className="choropleth-map" id="map"></div>     
-            {/* <svg height="5" width="5" xmlns="http://www.w3.org/2000/svg" version="1.1"> <defs> <pattern id="lightstripe" patternUnits="userSpaceOnUse" width="5" height="5"> <image xlink:href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc1JyBoZWlnaHQ9JzUnPgogIDxyZWN0IHdpZHRoPSc1JyBoZWlnaHQ9JzUnIGZpbGw9J3doaXRlJy8+CiAgPHBhdGggZD0nTTAgNUw1IDBaTTYgNEw0IDZaTS0xIDFMMSAtMVonIHN0cm9rZT0nIzg4OCcgc3Ryb2tlLXdpZHRoPScxJy8+Cjwvc3ZnPg==" x="0" y="0" width="5" height="5"> </image> </pattern> </defs></svg> */}
-
-            <svg className='bg-on-surface' id="scatterplot"></svg>
-            <svg className='bg-on-surface' id="histplot"></svg>
-            
-            {/* <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script> */}
-            
+            <div className="flex gap-4">
+                <div className="flex flex-col space-y-4">
+                    <svg id="scatterplot"></svg>
+                    <svg id="histplot"></svg>
+                </div>
+                <div className="choropleth-map" id="map"></div>
+            </div>     
+                        
             <div className="tooltip" id="tooltip-choropleth"></div>
             <div className="tooltip" id="tooltip-scatterplot"></div>
             <div className="tooltip" id="tooltip-histplot"></div>

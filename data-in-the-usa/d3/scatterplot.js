@@ -11,13 +11,14 @@ class Scatterplot {
         this.config = {
             parentElement: _config.parentElement,
             colorScale: _config.colorScale,
-            filter: _config.filter,
-            containerWidth: _config.containerWidth || 500,
+            // filter: _config.filter,
+            containerWidth: _config.containerWidth || 300,
             containerHeight: _config.containerHeight || 300,
             margin: _config.margin || {top: 25, right: 20, bottom: 40, left: 35},
             tooltipPadding: _config.tooltipPadding || 15
         }
         this.data = _data;
+        this.colName = "percent_stroke";
         this.initVis();
     }
 
@@ -41,7 +42,7 @@ class Scatterplot {
             .ticks(6)
             // .tickSize(-vis.height - 10)
             .tickPadding(10)
-            .tickFormat(d => '$' + d);
+            .tickFormat(d => '$' + d/1000 + 'K');
 
         vis.yAxis = d3.axisLeft(vis.yScale)
             .ticks(6)
@@ -90,23 +91,34 @@ class Scatterplot {
    */
     updateVis() {
         let vis = this;
+        console.log("Updating scatterplot for column:", vis.colName);
 
         // Transform the data from wide to long format
-        const cols = [
-            // 'percent_high_cholesterol', 
-            'percent_stroke', 
-            // 'percent_coronary_heart_disease', 
-            // 'percent_high_blood_pressure'
-        ];
+        // const cols = [
+        //     // 'percent_high_cholesterol', 
+        //     // 'percent_stroke', 
+        //     // 'percent_coronary_heart_disease', 
+        //     'percent_high_blood_pressure'
+        // ];
         
-        vis.data = vis.data.flatMap(d =>
-            cols.map(col => ({
-                display_name: d.display_name,
-                median_household_income: +d.median_household_income,
-                col: col,
-                value: +d[col]
-            }))
-        );
+        // vis.data = vis.data.flatMap(d =>
+        //     cols.map(col => ({
+        //         display_name: d.display_name,
+        //         median_household_income: +d.median_household_income,
+        //         col: col,
+        //         value: +d[col]
+        //     }))
+        // );
+
+        const col = vis.colName;
+        vis.data = vis.data.map(d => ({
+            display_name: d.display_name,
+            median_household_income: +d.median_household_income,
+            col: col,
+            value: +d[col]
+        }));
+
+        console.log(vis.data)
     
         // Specificy accessor functions
         vis.xValue = d => d.median_household_income;
@@ -131,7 +143,7 @@ class Scatterplot {
                 .data(vis.data, d => d.trail)
             .join('circle')
                 .attr('class', 'point')
-                .attr('r', 4)
+                .attr('r', 2)
                 .attr('cy', d => vis.yScale(vis.yValue(d)))
                 .attr('cx', d => vis.xScale(vis.xValue(d)))
                 .attr('fill', d => vis.config.colorScale(vis.colorValue(d)));

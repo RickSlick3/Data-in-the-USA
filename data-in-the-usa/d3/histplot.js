@@ -12,12 +12,13 @@ class Histplot {
             this.config = {
             parentElement: _config.parentElement,
             colors: _config.colorScale,
-            containerWidth: _config.containerWidth || 260,
+            containerWidth: _config.containerWidth || 500,
             containerHeight: _config.containerHeight || 200,
             margin: _config.margin || {top: 25, right: 20, bottom: 20, left: 40},
             tooltipPadding: _config.tooltipPadding || 15
         }
         this.data = _data;
+        this.colName =  "percent_stroke";
         this.initVis();
     }
 
@@ -73,9 +74,9 @@ class Histplot {
             .attr('x', 0)
             .attr('y', 0)
             .attr('dy', '.71em')
-            .text('Number of Counties');
+            .text('Distribution of Counties');
 
-        vis.updateVis()
+        // vis.updateVis()
     }
 
     /**
@@ -86,29 +87,57 @@ class Histplot {
 
         // Prepare data: count number of trails in each difficulty category
         // i.e. [{ key: 'easy', count: 10 }, {key: 'intermediate', ...
-        const aggregatedDataMap = d3.rollups(
-            vis.data, 
-            v => v.length, 
-            d => Math.floor(d.percent_stroke)
-        );
-        vis.aggregatedData = Array.from(aggregatedDataMap, ([key, count]) => ({ key, count }));
+        // const aggregatedDataMap = d3.rollups(
+        //     vis.data, 
+        //     v => v.length, 
+        //     d => Math.floor(d.percent_stroke)
+        // );
+        // vis.aggregatedData = Array.from(aggregatedDataMap, ([key, count]) => ({ key, count }));
         
-        // Sort the aggregated data numerically by the key
-        vis.aggregatedData.sort((a, b) => a.key - b.key);       
+        // // Sort the aggregated data numerically by the key
+        // vis.aggregatedData.sort((a, b) => a.key - b.key);       
 
-        const orderedKeys = ['Easy', 'Intermediate', 'Difficult'];
-        vis.aggregatedData = vis.aggregatedData.sort((a,b) => {
-        return orderedKeys.indexOf(a.key) - orderedKeys.indexOf(b.key);
-        });
+        // const orderedKeys = ['Easy', 'Intermediate', 'Difficult'];
+        // vis.aggregatedData = vis.aggregatedData.sort((a,b) => {
+        // return orderedKeys.indexOf(a.key) - orderedKeys.indexOf(b.key);
+        // });
 
-        // Specificy accessor functions
-        vis.colorValue = d => d.key;
-        vis.xValue = d => d.key;
-        vis.yValue = d => d.count;
+        // // Specificy accessor functions
+        // vis.colorValue = d => d.key;
+        // vis.xValue = d => d.key;
+        // vis.yValue = d => d.count;
 
-        // Set the scale input domains
-        vis.xScale.domain(vis.aggregatedData.map(vis.xValue));
-        vis.yScale.domain([0, d3.max(vis.aggregatedData, vis.yValue)]);
+        // // Set the scale input domains
+        // vis.xScale.domain(vis.aggregatedData.map(vis.xValue));
+        // vis.yScale.domain([0, d3.max(vis.aggregatedData, vis.yValue)]);
+
+        // Get the extent of the column values
+        const col = vis.colName;
+        const [min, max] = d3.extent(vis.data, d => d[col]);
+        const numBins = 8;
+
+        // Create a histogram generator that bins data into x bins
+        const histogram = d3.histogram()
+            .value(d => d[col])
+            .domain([min, max])
+            .thresholds(numBins); // exactly x bins
+
+        // Generate the bins
+        vis.bins = histogram(vis.data);
+
+        // Update the x-scale as a linear scale based on the data domain
+        vis.xScale = d3.scaleLinear()
+            .domain([min, max])
+            .range([0, vis.width]);
+
+        // Update y-scale based on the maximum count in any bin
+        vis.yScale.domain([0, d3.max(vis.bins, d => d.length)]);
+
+        // Update x-axis to display 10 ticks
+        vis.xAxis = d3.axisBottom(vis.xScale)
+            .ticks(numBins)
+            .tickFormat(d => `${d}%`)
+            .tickSizeOuter(0);
 
         vis.renderVis();
     }
@@ -120,15 +149,16 @@ class Histplot {
         let vis = this;
 
         // Add rectangles
-        const bars = vis.chart.selectAll('.bar')
-            .data(vis.aggregatedData, vis.xValue)
-        .join('rect')
-            .attr('class', 'bar')
-            .attr('x', d => vis.xScale(vis.xValue(d)))
-            .attr('width', vis.xScale.bandwidth())
-            .attr('height', d => vis.height - vis.yScale(vis.yValue(d)))
-            .attr('y', d => vis.yScale(vis.yValue(d)))
-            .attr('fill', d => vis.colorScale('percent_stroke'));
+        // const bars = vis.chart.selectAll('.bar')
+        //     .data(vis.aggregatedData, vis.xValue)
+        // .join('rect')
+        //     .attr('class', 'bar')
+        //     .attr('x', d => vis.xScale(vis.xValue(d)))
+        //     .attr('width', vis.xScale.bandwidth())
+        //     .attr('height', d => vis.height - vis.yScale(vis.yValue(d)))
+        //     .attr('y', d => vis.yScale(vis.yValue(d)))
+        //     .attr('fill', d => vis.colorScale('percent_stroke'));
+        
             // .attr('fill', d => vis.colorScale(vis.colorValue(d)))
             // .on('click', function(event, d) {
             //     const isActive = difficultyFilter.includes(d.key);
@@ -142,6 +172,18 @@ class Histplot {
             //     d3.select(this).classed('active', !isActive); // Add class to style active filters with CSS
             // });
 
+        const bars = vis.chart.selectAll('.bar')
+            .data(vis.bins)
+            .join('rect')
+                .attr('class', 'bar')
+                // Use d.x0 for the left edge and compute the width from the bin boundaries.
+                .attr('x', d => vis.xScale(d.x0))
+                .attr('width', d => Math.max(0, vis.xScale(d.x1) - vis.xScale(d.x0) - 1))
+                .attr('y', d => vis.yScale(d.length))
+                .attr('height', d => vis.height - vis.yScale(d.length))
+                .attr('fill', d => vis.colorScale(vis.colName));
+    
+
         bars
             .on('mouseover', (event,d) => {
                 // console.log(d); // log data in tooltip
@@ -150,7 +192,9 @@ class Histplot {
                     .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')   
                     .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
                     .html(`
-                        <div class="tooltip-title">${d.key}%: ${d.count} Counties</div>
+                        <div class="tooltip-title">
+                            ${d.x0} - ${d.x1}%: ${d.length} Counties
+                        </div>
                     `);
             })
             .on('mouseleave', () => {
