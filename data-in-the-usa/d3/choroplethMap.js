@@ -58,7 +58,7 @@ class ChoroplethMap {
 
         vis.colorScale = d3.scaleLinear()
             .domain(d3.extent(vis.data.objects.counties.geometries, d => d.properties.percent_stroke))
-            .range(['#fff', '#000'])
+            .range(['#3f5740', '#00ff04'])
             .interpolate(d3.interpolateHcl);
 
             vis.path = d3.geoPath()
@@ -77,7 +77,7 @@ class ChoroplethMap {
             .data(topojson.feature(vis.us, vis.us.objects.counties).features)
             .enter().append("path")
             .attr("d", vis.path)
-            // .attr("class", "county-boundary")
+            .attr("class", "county-boundary")
             .attr('fill', d => {
                 if (d.properties.percent_stroke) {
                     return vis.colorScale(d.properties.percent_stroke);
@@ -105,9 +105,9 @@ class ChoroplethMap {
             });
 
         vis.g.append("path")
-                    .datum(topojson.mesh(vis.us, vis.us.objects.states, function(a, b) { return a !== b; }))
-                    .attr("id", "state-borders")
-                    .attr("d", vis.path);
+            .datum(topojson.mesh(vis.us, vis.us.objects.states, function(a, b) { return a !== b; }))
+            .attr("id", "state-borders")
+            .attr("d", vis.path);
     }
 }
 
