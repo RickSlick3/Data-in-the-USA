@@ -12,6 +12,7 @@ const Dashboard = () => {
     const dataRef = useRef(null);
 
     const [activeCol, setActiveCol] = useState("percent_stroke");
+    const columns = ['percent_high_cholesterol', 'percent_stroke', 'percent_coronary_heart_disease', 'percent_high_blood_pressure', 'percent_smoking', 'percent_inactive'];
     const singleGreen = '#00700b';
 
     useEffect(() => {
@@ -22,24 +23,28 @@ const Dashboard = () => {
             // Initialize color scale
             const colorScale = d3.scaleOrdinal()
                 .range([singleGreen])
-                .domain(['percent_high_cholesterol', 'percent_stroke', 'percent_coronary_heart_disease', 'percent_high_blood_pressure']); // percent_smoking, percent_no_heath_insurance
+                .domain(columns);
 
-            scatterplotRef.current = new Scatterplot({ 
-                parentElement: '#scatterplot',
-                colorScale: colorScale,
-                // filter: colFilter,
-                containerWidth: 300,
-                containerHeight: 200
-            }, dataRef.current);
-            scatterplotRef.current.updateVis();
+            if (!scatterplotRef.current) {
+                scatterplotRef.current = new Scatterplot({ 
+                    parentElement: '#scatterplot',
+                    colorScale: colorScale,
+                    // filter: colFilter,
+                    containerWidth: 300,
+                    containerHeight: 200
+                }, dataRef.current);
+                scatterplotRef.current.updateVis();
+            }
 
-            histplotRef.current = new Histplot({
-                parentElement: '#histplot',
-                colorScale: colorScale,
-                containerWidth: 300,
-                containerHeight: 300
-            }, dataRef.current);
-            histplotRef.current.updateVis();
+            if (!histplotRef.current) {
+                histplotRef.current = new Histplot({
+                    parentElement: '#histplot',
+                    colorScale: colorScale,
+                    containerWidth: 300,
+                    containerHeight: 300
+                }, dataRef.current);
+                histplotRef.current.updateVis();
+            }
         })
         .catch(error => console.error(error));
         
@@ -81,17 +86,8 @@ const Dashboard = () => {
             d.percent_inactve = +d.percent_inactive;
         });
         // filter out rows with -1 in any relevant column
-        const columnsToCheck = [
-            'median_household_income',
-            'percent_high_cholesterol',
-            'percent_stroke',
-            'percent_coronary_heart_disease',
-            'percent_high_blood_pressure',
-            'percent_smoking',
-            'percent_inactive'
-        ];
         const newData = data.filter(d => {
-            return columnsToCheck.every(col => d[col] !== -1);
+            return columns.every(col => d[col] !== -1);
         });
         console.log(newData);
         return newData;
@@ -127,12 +123,15 @@ const Dashboard = () => {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold font-Outfit">Health's Relationship with Wealth</h1>
-            <div className='text-sm leading-[1]'>Data from <a className='text-gray-500 underline' target='_blank' href="https://www.cdc.gov/heart-disease-stroke-atlas/about/?CDC_AAref_Val=https://www.cdc.gov/dhdsp/maps/atlas/index.htm">the US Heart and Stroke Atlas</a></div>
+            <div className='flex items-baseline space-x-4'>
+                <h1 className="text-2xl font-bold font-Outfit">Health's Relationship with Wealth</h1>
+                <div className='text-xs leading-[1]'>Data from <a className='text-gray-500 underline' target='_blank' href="https://www.cdc.gov/heart-disease-stroke-atlas/about/?CDC_AAref_Val=https://www.cdc.gov/dhdsp/maps/atlas/index.htm">the US Heart and Stroke Atlas</a></div>
+            </div>
+            
             {/* This is where the D3 chart will be rendered */}
 
             <ul className="legend flex gap-2 text-[12px] my-3">
-                <span className='font-bold'>Columns:</span>
+                <span className='font-bold text-[14px]'>Health Columns:</span>
                 <li className={`legend-btn border px-1 ${activeCol == "percent_stroke" ? 'bg-gray-300' : ''}`} col="ps" onClick={() => {changeColumn("percent_stroke");}}>Stroke</li>
                 <li className={`legend-btn border px-1 ${activeCol == "percent_high_cholesterol" ? 'bg-gray-300' : ''}`} col="phc" onClick={() => {changeColumn("percent_high_cholesterol");}}>High Cholesterol</li>
                 <li className={`legend-btn border px-1 ${activeCol == "percent_coronary_heart_disease" ? 'bg-gray-300' : ''}`} col="pchd" onClick={() => {changeColumn("percent_coronary_heart_disease");}}>Coranary Heart Disease</li>

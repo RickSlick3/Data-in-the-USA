@@ -29,6 +29,13 @@
   padding-left: 20px;
 }
 
+.point:hover {
+  stroke: #333;
+}
+.bar:hover {
+  stroke: #333;
+}
+
 /* Choroplet Map Styles */
 #state-borders {
   fill: none;

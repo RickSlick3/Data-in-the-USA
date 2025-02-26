@@ -13,11 +13,11 @@ class ChoroplethMap {
             parentElement: _config.parentElement,
             containerWidth: _config.containerWidth || 1100,
             containerHeight: _config.containerHeight || 500,
-            margin: _config.margin || {top: 10, right: 10, bottom: 10, left: 10},
+            margin: _config.margin || {top: 0, right: 0, bottom: 0, left: 0},
             tooltipPadding: 10,
             legendBottom: 50,
-            legendLeft: 50,
-            legendRectHeight: 150, 
+            legendLeft: 100,
+            legendRectHeight: 200, 
             legendRectWidth: 12,
         }
         this.geoData = _data;
@@ -44,6 +44,15 @@ class ChoroplethMap {
             .attr('class', 'center-container')
             .attr('width', vis.config.containerWidth)
             .attr('height', vis.config.containerHeight);
+
+        // title
+        // Add a title at the top center of the map
+        vis.svg.append("text")
+            .attr("x", vis.config.containerWidth / 2)
+            .attr("y", 30) // Adjust the y-position as needed
+            .attr("text-anchor", "middle")
+            .attr("class", "map-title font-bold")
+            .text("Spacial Distribution of Health");
 
         vis.projection = d3.geoAlbersUsa()
             .translate([vis.width /2 , vis.height / 2])
@@ -88,7 +97,7 @@ class ChoroplethMap {
             .range(['#39FF14', '#000'])
             .interpolate(d3.interpolateHcl);
 
-            vis.path = d3.geoPath()
+        vis.path = d3.geoPath()
             .projection(vis.projection);
 
         vis.counties = vis.g.append("g")

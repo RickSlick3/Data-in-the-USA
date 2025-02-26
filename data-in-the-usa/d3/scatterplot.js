@@ -80,7 +80,7 @@ class Scatterplot {
             .text('Median Household Income');
 
         vis.svg.append('text')
-            .attr('class', 'axis-title')
+            .attr('class', 'axis-title font-Outfit')
             .attr('x', 0)
             .attr('y', 0)
             .attr('dy', '.71em')
