@@ -18,7 +18,8 @@ class Scatterplot {
             tooltipPadding: _config.tooltipPadding || 15
         }
         this.data = _data;
-        this.colName = "percent_stroke";
+        this.yColName = "percent_stroke";
+        this.xColName = "median_household_income";
         this.initVis();
     }
 
@@ -38,11 +39,6 @@ class Scatterplot {
             .range([vis.height, 0]);
 
         // Initialize axes
-        vis.xAxis = d3.axisBottom(vis.xScale)
-            .ticks(6)
-            // .tickSize(-vis.height - 10)
-            .tickPadding(10)
-            .tickFormat(d => '$' + d/1000 + 'K');
 
         vis.yAxis = d3.axisLeft(vis.yScale)
             .ticks(6)
@@ -68,23 +64,6 @@ class Scatterplot {
         // Append y-axis group
         vis.yAxisG = vis.chart.append('g')
             .attr('class', 'axis y-axis');
-
-         // Append both axis titles
-        vis.chart.append('text')
-            .attr('class', 'axis-title')
-            .attr('y', vis.height - 15)
-            .attr('x', vis.width + 10)
-            .attr('dy', '.71em')
-            .style('text-anchor', 'end')
-            .style('font-size', '12px')
-            .text('Median Household Income');
-
-        vis.svg.append('text')
-            .attr('class', 'axis-title font-Outfit')
-            .attr('x', 0)
-            .attr('y', 0)
-            .attr('dy', '.71em')
-            .text('Percent People with Health Issue');
     }
 
     /**
@@ -92,7 +71,40 @@ class Scatterplot {
    */
     updateVis() {
         let vis = this;
-        console.log("Updating scatterplot for column:", vis.colName);
+        console.log("Updating scatterplot for column:", vis.yColName);
+        
+        if (d3.select("#x-title-scat")) { d3.select("#x-title-scat").remove(); d3.select("#y-title-scat").remove(); }
+
+        if (vis.xColName == "median_household_income") {
+            vis.xAxis = d3.axisBottom(vis.xScale)
+                .ticks(6)
+                .tickPadding(10)
+                .tickFormat(d => '$' + d/1000 + 'K');
+        } else {
+            vis.xAxis = d3.axisBottom(vis.xScale)
+                .ticks(6)
+                .tickPadding(10)
+                .tickFormat(d => d + '%');
+        }
+
+        // Append both axis titles
+        vis.chart.append('text')
+            .attr('id', 'x-title-scat')
+            .attr('class', 'axis-title')
+            .attr('y', vis.height - 15)
+            .attr('x', vis.width + 10)
+            .attr('dy', '.71em')
+            .style('text-anchor', 'end')
+            .style('font-size', '12px')
+            .text(vis.xColName.replace(/_/g, ' '));
+
+        vis.svg.append('text')
+            .attr('id', 'y-title-scat')
+            .attr('class', 'axis-title font-Outfit')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('dy', '.71em')
+            .text(vis.yColName.replace(/_/g, ' '));
 
         // Transform the data from wide to long format
         // const cols = [
@@ -111,10 +123,11 @@ class Scatterplot {
         //     }))
         // );
 
-        const col = vis.colName;
+        const col = vis.yColName;
+        const xCol = vis.xColName;
         vis.data = vis.data.map(d => ({
             display_name: d.display_name,
-            median_household_income: +d.median_household_income,
+            xCol: +d[xCol],
             col: col,
             value: +d[col]
         }));
@@ -122,7 +135,7 @@ class Scatterplot {
         console.log(vis.data)
     
         // Specificy accessor functions
-        vis.xValue = d => d.median_household_income;
+        vis.xValue = d => d.xCol;
         vis.yValue = d => d.value;
         vis.colorValue = d => d.col;
 
@@ -147,9 +160,15 @@ class Scatterplot {
                 .attr('r', 2)
                 .attr('cy', d => vis.yScale(vis.yValue(d)))
                 .attr('cx', d => vis.xScale(vis.xValue(d)))
-                .attr('fill', d => vis.config.colorScale(vis.colorValue(d)));
+                .attr('fill', d => vis.config.colorScale(vis.colorValue(d)))
+                .style('cursor', 'pointer');
 
         // Tooltip event listeners
+        const xFormatName = vis.xColName.replace(/_/g, ' ');
+        let perc = '';
+        let dol = '';
+        if (vis.xColName == "median_household_income") { dol = '$'; } 
+        else { perc = '%'; }
         circles
             .on('mouseover', (event,d) => {
                 // console.log(d); // log data in tooltip
@@ -159,7 +178,7 @@ class Scatterplot {
                     .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
                     .html(`
                         <div class="tooltip-title">${d.display_name}</div>
-                        <div><i>Median Household Income: $${d.median_household_income}</i></div>
+                        <div><i>${xFormatName}: ${dol}${d.xCol}${perc}</i></div>
                         <div><i>${d.col}: ${d.value}%</i></div>
                     `);
             })

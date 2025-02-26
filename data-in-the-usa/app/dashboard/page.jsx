@@ -12,7 +12,8 @@ const Dashboard = () => {
     const dataRef = useRef(null);
 
     const [activeCol, setActiveCol] = useState("percent_stroke");
-    const columns = ['percent_high_cholesterol', 'percent_stroke', 'percent_coronary_heart_disease', 'percent_high_blood_pressure', 'percent_smoking', 'percent_inactive'];
+    const [activeXCol, setActiveXCol] = useState("median_household_income")
+    const columns = ['median_household_income', 'poverty_perc', 'percent_high_cholesterol', 'percent_stroke', 'percent_coronary_heart_disease', 'percent_high_blood_pressure', 'percent_smoking', 'percent_inactive'];
     const singleGreen = '#00700b';
 
     useEffect(() => {
@@ -94,7 +95,7 @@ const Dashboard = () => {
     }
 
 
-    function changeColumn(colName) {
+    function changeYColumn(yColName) {
         // const index = colFilter.indexOf(colName)
         // index === -1 ? colFilter.push(colName) : colFilter.splice(index, 1);
         // if (colFilter.length == 0) {
@@ -102,20 +103,47 @@ const Dashboard = () => {
         // } else {
         //     scatterplot.data = data.filter(d => difficultyFilter.includes(d.difficulty));
         // }
-        if (activeCol != colName){
-            console.log('changing columns')
-            setActiveCol(colName);
+        if (activeCol != yColName){
+            console.log('changing y columns')
+            setActiveCol(yColName);
             if (scatterplotRef.current && histplotRef.current && choroplethRef.current) {
-                scatterplotRef.current.colName = colName;
+                scatterplotRef.current.yColName = yColName;
                 scatterplotRef.current.data = dataRef.current;
                 scatterplotRef.current.updateVis();
 
-                histplotRef.current.colName = colName;
+                histplotRef.current.yColName = yColName;
                 histplotRef.current.data = dataRef.current;
                 histplotRef.current.updateVis();
 
-                choroplethRef.current.colName = colName;
+                choroplethRef.current.yColName = yColName;
                 choroplethRef.current.updateVis();
+            }
+        }
+    }
+
+
+    function changeXColumn(xColName) {
+        // const index = colFilter.indexOf(colName)
+        // index === -1 ? colFilter.push(colName) : colFilter.splice(index, 1);
+        // if (colFilter.length == 0) {
+        //     scatterplot.data = data;
+        // } else {
+        //     scatterplot.data = data.filter(d => difficultyFilter.includes(d.difficulty));
+        // }
+        if (activeXCol != xColName){
+            console.log('changing x columns')
+            setActiveXCol(xColName);
+            if (scatterplotRef.current && histplotRef.current && choroplethRef.current) {
+                scatterplotRef.current.xColName = xColName;
+                scatterplotRef.current.data = dataRef.current;
+                scatterplotRef.current.updateVis();
+
+                // histplotRef.current.xColName = xColName;
+                // histplotRef.current.data = dataRef.current;
+                // histplotRef.current.updateVis();
+
+                // choroplethRef.current.xColName = xColName;
+                // choroplethRef.current.updateVis();
             }
         }
     }
@@ -123,7 +151,7 @@ const Dashboard = () => {
 
     return (
         <div>
-            <div className='flex items-baseline space-x-4'>
+            <div className='flex items-baseline space-x-8'>
                 <h1 className="text-2xl font-bold font-Outfit">Health's Relationship with Wealth</h1>
                 <div className='text-xs leading-[1]'>Data from <a className='text-gray-500 underline' target='_blank' href="https://www.cdc.gov/heart-disease-stroke-atlas/about/?CDC_AAref_Val=https://www.cdc.gov/dhdsp/maps/atlas/index.htm">the US Heart and Stroke Atlas</a></div>
             </div>
@@ -131,13 +159,18 @@ const Dashboard = () => {
             {/* This is where the D3 chart will be rendered */}
 
             <ul className="legend flex gap-2 text-[12px] my-3">
+                <span className='font-bold text-[14px]'>Wealth Columns:</span>
+                <li className={`legend-btn border px-1 ${activeXCol == "median_household_income" ? 'bg-gray-300' : ''}`} col="mhi" onClick={() => {changeXColumn("median_household_income");}}>Median Household Income</li>
+                <li className={`legend-btn border px-1 ${activeXCol == "poverty_perc" ? 'bg-gray-300' : ''}`} col="pp" onClick={() => {changeXColumn("poverty_perc");}}>Poverty</li>
+            </ul>
+            <ul className="legend flex gap-2 text-[12px] my-3">
                 <span className='font-bold text-[14px]'>Health Columns:</span>
-                <li className={`legend-btn border px-1 ${activeCol == "percent_stroke" ? 'bg-gray-300' : ''}`} col="ps" onClick={() => {changeColumn("percent_stroke");}}>Stroke</li>
-                <li className={`legend-btn border px-1 ${activeCol == "percent_high_cholesterol" ? 'bg-gray-300' : ''}`} col="phc" onClick={() => {changeColumn("percent_high_cholesterol");}}>High Cholesterol</li>
-                <li className={`legend-btn border px-1 ${activeCol == "percent_coronary_heart_disease" ? 'bg-gray-300' : ''}`} col="pchd" onClick={() => {changeColumn("percent_coronary_heart_disease");}}>Coranary Heart Disease</li>
-                <li className={`legend-btn border px-1 ${activeCol == "percent_high_blood_pressure" ? 'bg-gray-300' : ''}`} col="phbp" onClick={() => {changeColumn("percent_high_blood_pressure");}}>High Blood Pressure</li>
-                <li className={`legend-btn border px-1 ${activeCol == "percent_smoking" ? 'bg-gray-300' : ''}`} col="ps" onClick={() => {changeColumn("percent_smoking");}}>Smoking</li>
-                <li className={`legend-btn border px-1 ${activeCol == "percent_inactive" ? 'bg-gray-300' : ''}`} col="pi" onClick={() => {changeColumn("percent_inactive");}}>Physically Inactive</li>
+                <li className={`legend-btn border px-1 ${activeCol == "percent_stroke" ? 'bg-gray-300' : ''}`} col="ps" onClick={() => {changeYColumn("percent_stroke");}}>Stroke</li>
+                <li className={`legend-btn border px-1 ${activeCol == "percent_high_cholesterol" ? 'bg-gray-300' : ''}`} col="phc" onClick={() => {changeYColumn("percent_high_cholesterol");}}>High Cholesterol</li>
+                <li className={`legend-btn border px-1 ${activeCol == "percent_coronary_heart_disease" ? 'bg-gray-300' : ''}`} col="pchd" onClick={() => {changeYColumn("percent_coronary_heart_disease");}}>Heart Disease</li>
+                <li className={`legend-btn border px-1 ${activeCol == "percent_high_blood_pressure" ? 'bg-gray-300' : ''}`} col="phbp" onClick={() => {changeYColumn("percent_high_blood_pressure");}}>High Blood Pressure</li>
+                <li className={`legend-btn border px-1 ${activeCol == "percent_smoking" ? 'bg-gray-300' : ''}`} col="ps" onClick={() => {changeYColumn("percent_smoking");}}>Smoking</li>
+                <li className={`legend-btn border px-1 ${activeCol == "percent_inactive" ? 'bg-gray-300' : ''}`} col="pi" onClick={() => {changeYColumn("percent_inactive");}}>Physically Inactive</li>
             </ul>
 
             <div className="flex">

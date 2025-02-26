@@ -18,7 +18,7 @@ class Histplot {
             tooltipPadding: _config.tooltipPadding || 15
         }
         this.data = _data;
-        this.colName =  "percent_stroke";
+        this.yColName =  "percent_stroke";
         this.initVis();
     }
 
@@ -68,14 +68,6 @@ class Histplot {
         vis.yAxisG = vis.chart.append('g')
             .attr('class', 'axis y-axis');
 
-        // Append axis title
-        vis.svg.append('text')
-            .attr('class', 'axis-title')
-            .attr('x', 0)
-            .attr('y', 0)
-            .attr('dy', '.71em')
-            .text('Distribution of Counties');
-
         // vis.updateVis()
     }
 
@@ -84,6 +76,17 @@ class Histplot {
     */
     updateVis() {
         let vis = this;
+
+        if (d3.select("#y-title-hist")) { d3.select("#y-title-hist").remove(); }
+
+        // Append axis title
+        vis.svg.append('text')
+            .attr('id', 'y-title-hist')
+            .attr('class', 'axis-title')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('dy', '.71em')
+            .text(`Dist. of \n ${vis.yColName.replace(/_/g, ' ')}`);
 
         // Prepare data: count number of trails in each difficulty category
         // i.e. [{ key: 'easy', count: 10 }, {key: 'intermediate', ...
@@ -112,7 +115,7 @@ class Histplot {
         // vis.yScale.domain([0, d3.max(vis.aggregatedData, vis.yValue)]);
 
         // Get the extent of the column values
-        const col = vis.colName;
+        const col = vis.yColName;
         const [min, max] = d3.extent(vis.data, d => d[col]);
         const numBins = 8;
 
@@ -181,9 +184,9 @@ class Histplot {
                 .attr('width', d => Math.max(0, vis.xScale(d.x1) - vis.xScale(d.x0) - 1))
                 .attr('y', d => vis.yScale(d.length))
                 .attr('height', d => vis.height - vis.yScale(d.length))
-                .attr('fill', d => vis.colorScale(vis.colName));
+                .attr('fill', d => vis.colorScale(vis.yColName))
+                .style('cursor', 'pointer');
     
-
         bars
             .on('mouseover', (event,d) => {
                 // console.log(d); // log data in tooltip

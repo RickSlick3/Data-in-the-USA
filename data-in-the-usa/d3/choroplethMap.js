@@ -22,7 +22,7 @@ class ChoroplethMap {
         }
         this.geoData = _data;
         this.cdcData = cdcData;
-        this.colName = "percent_stroke";
+        this.yColName = "percent_stroke";
         // this.config = _config;
         this.us = _data;
         // this.active = d3.select(null);
@@ -45,15 +45,6 @@ class ChoroplethMap {
             .attr('width', vis.config.containerWidth)
             .attr('height', vis.config.containerHeight);
 
-        // title
-        // Add a title at the top center of the map
-        vis.svg.append("text")
-            .attr("x", vis.config.containerWidth / 2)
-            .attr("y", 30) // Adjust the y-position as needed
-            .attr("text-anchor", "middle")
-            .attr("class", "map-title font-bold")
-            .text("Spacial Distribution of Health");
-
         vis.projection = d3.geoAlbersUsa()
             .translate([vis.width /2 , vis.height / 2])
             .scale(vis.width);
@@ -72,6 +63,16 @@ class ChoroplethMap {
             d3.select("#legend").remove();
             d3.select("#legend-axis").remove();
         }
+        if (d3.select("#map-title")) { d3.select("#map-title").remove(); }
+
+        // Add a title at the top center of the map
+        vis.svg.append("text")
+            .attr('id', 'map-title')
+            .attr("x", vis.config.containerWidth / 2)
+            .attr("y", 30) // Adjust the y-position as needed
+            .attr("text-anchor", "middle")
+            .attr("class", "map-title font-bold")
+            .text(`Spacial Distribution of ${vis.yColName.replace(/_/g, ' ')}`);
         
         // Combine both datasets by adding the population density to the TopoJSON file
         // console.log(geoData);
@@ -80,8 +81,8 @@ class ChoroplethMap {
             for (let i = 0; i < vis.cdcData.length; i++) {
                 if (d.id === vis.cdcData[i].cnty_fips) {
                     // assign a new property to d to use in the map
-                    d.properties.colValue = +vis.cdcData[i][vis.colName];
-                    d.properties.colName = vis.colName
+                    d.properties.colValue = +vis.cdcData[i][vis.yColName];
+                    d.properties.yColName = vis.yColName
                 }
             }
         });
@@ -115,7 +116,8 @@ class ChoroplethMap {
                 } else {
                     return 'url(#lightstripe)';
                 }
-            });
+            })
+            .style("cursor", "pointer");
 
         /**
         * Here we will create the legend for the map
@@ -173,7 +175,7 @@ class ChoroplethMap {
             .on('mouseover', (event,d) => {
                 console.log(d);
                 // console.log(event);
-                const percentValue = d.properties.colValue && d.properties.colValue != -1 ? `${d.properties.colName}: <strong>${d.properties.colValue}</strong>%</sup>` : 'No data available'; 
+                const percentValue = d.properties.colValue && d.properties.colValue != -1 ? `${d.properties.yColName}: <strong>${d.properties.colValue}</strong>%</sup>` : 'No data available'; 
                 d3.select('#tooltip-choropleth')
                     .style('display', 'block')
                     .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')   
