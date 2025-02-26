@@ -14,7 +14,7 @@ class Scatterplot {
             filter: _config.filter,
             containerWidth: _config.containerWidth || 500,
             containerHeight: _config.containerHeight || 300,
-            margin: _config.margin || {top: 25, right: 20, bottom: 20, left: 35},
+            margin: _config.margin || {top: 25, right: 20, bottom: 40, left: 35},
             tooltipPadding: _config.tooltipPadding || 15
         }
         this.data = _data;
@@ -39,13 +39,13 @@ class Scatterplot {
         // Initialize axes
         vis.xAxis = d3.axisBottom(vis.xScale)
             .ticks(6)
-            .tickSize(-vis.height - 10)
+            // .tickSize(-vis.height - 10)
             .tickPadding(10)
             .tickFormat(d => '$' + d);
 
         vis.yAxis = d3.axisLeft(vis.yScale)
             .ticks(6)
-            .tickSize(-vis.width - 10)
+            // .tickSize(-vis.width - 10)
             .tickPadding(10)
             .tickFormat(d => d + '%');
 
@@ -140,7 +140,7 @@ class Scatterplot {
         circles
             .on('mouseover', (event,d) => {
                 // console.log(d); // log data in tooltip
-                d3.select('#tooltip')
+                d3.select('#tooltip-scatterplot')
                     .style('display', 'block')
                     .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')   
                     .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
@@ -151,18 +151,22 @@ class Scatterplot {
                     `);
             })
             .on('mouseleave', () => {
-                d3.select('#tooltip').style('display', 'none');
+                d3.select('#tooltip-scatterplot').style('display', 'none');
             });
         
         // Update the axes/gridlines
         // We use the second .call() to remove the axis and just show gridlines
-        vis.xAxisG
-            .call(vis.xAxis)
-            .call(g => g.select('.domain').remove());
+        // vis.xAxisG
+        //     .call(vis.xAxis)
+        //     .call(g => g.select('.domain').remove());
 
-        vis.yAxisG
-            .call(vis.yAxis)
-            .call(g => g.select('.domain').remove())
+        // vis.yAxisG
+        //     .call(vis.yAxis)
+        //     .call(g => g.select('.domain').remove())
+
+        // update axis
+        vis.xAxisG.call(vis.xAxis);
+        vis.yAxisG.call(vis.yAxis);
     }
 }
 

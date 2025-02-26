@@ -15,6 +15,7 @@ class Histplot {
             containerWidth: _config.containerWidth || 260,
             containerHeight: _config.containerHeight || 200,
             margin: _config.margin || {top: 25, right: 20, bottom: 20, left: 40},
+            tooltipPadding: _config.tooltipPadding || 15
         }
         this.data = _data;
         this.initVis();
@@ -144,7 +145,7 @@ class Histplot {
         bars
             .on('mouseover', (event,d) => {
                 // console.log(d); // log data in tooltip
-                d3.select('#tooltip')
+                d3.select('#tooltip-histplot')
                     .style('display', 'block')
                     .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')   
                     .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
@@ -153,7 +154,7 @@ class Histplot {
                     `);
             })
             .on('mouseleave', () => {
-                d3.select('#tooltip').style('display', 'none');
+                d3.select('#tooltip-histplot').style('display', 'none');
             });
 
         // Update axes
