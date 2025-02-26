@@ -60,9 +60,9 @@
 /* in style/style.css */
 /* Legend */
 .legend {
-  margin: 20px 0;
   list-style: none;
   padding: 0;
+  line-height: 1.5;
 }
 .legend-btn {
   display: inline-block;

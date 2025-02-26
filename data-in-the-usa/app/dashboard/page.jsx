@@ -123,19 +123,20 @@ const Dashboard = () => {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold font-Outfit mb-4">Health's Relationship with Wealth</h1>
+            <h1 className="text-2xl font-bold font-Outfit">Health's Relationship with Wealth</h1>
+            <div className='text-sm leading-[1]'>Data from <a className='text-gray-500 underline' target='_blank' href="https://www.cdc.gov/heart-disease-stroke-atlas/about/?CDC_AAref_Val=https://www.cdc.gov/dhdsp/maps/atlas/index.htm">the US Heart and Stroke Atlas</a></div>
             {/* This is where the D3 chart will be rendered */}
 
-            <ul className="legend flex gap-2">
-                <span className='font-bold text-xl'>Columns:</span>
+            <ul className="legend flex gap-2 text-[12px] my-3">
+                <span className='font-bold'>Columns:</span>
                 <li className={`legend-btn border px-1 ${activeCol == "percent_high_cholesterol" ? 'bg-[#bbb]' : ''}`} col="phc" onClick={() => {changeColumn("percent_high_cholesterol");}}>High Cholesterol</li>
                 <li className={`legend-btn border px-1 ${activeCol == "percent_stroke" ? 'bg-[#bbb]' : ''}`} col="ps" onClick={() => {changeColumn("percent_stroke");}}>Stroke</li>
                 <li className={`legend-btn border px-1 ${activeCol == "percent_coronary_heart_disease" ? 'bg-[#bbb]' : ''}`} col="pchd" onClick={() => {changeColumn("percent_coronary_heart_disease");}}>Coranary Heart Disease</li>
                 <li className={`legend-btn border px-1 ${activeCol == "percent_high_blood_pressure" ? 'bg-[#bbb]' : ''}`} col="phbp" onClick={() => {changeColumn("percent_high_blood_pressure");}}>High Blood Pressure</li>
             </ul>
 
-            <div className="flex gap-4">
-                <div className="flex flex-col space-y-4">
+            <div className="flex">
+                <div className="flex flex-col space-y-3">
                     <svg id="scatterplot"></svg>
                     <svg id="histplot"></svg>
                 </div>

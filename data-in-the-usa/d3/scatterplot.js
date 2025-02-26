@@ -14,7 +14,7 @@ class Scatterplot {
             // filter: _config.filter,
             containerWidth: _config.containerWidth || 300,
             containerHeight: _config.containerHeight || 300,
-            margin: _config.margin || {top: 25, right: 20, bottom: 40, left: 35},
+            margin: _config.margin || {top: 25, right: 20, bottom: 30, left: 35},
             tooltipPadding: _config.tooltipPadding || 15
         }
         this.data = _data;
@@ -76,6 +76,7 @@ class Scatterplot {
             .attr('x', vis.width + 10)
             .attr('dy', '.71em')
             .style('text-anchor', 'end')
+            .style('font-size', '12px')
             .text('Median Household Income');
 
         vis.svg.append('text')

@@ -14,7 +14,7 @@ class Histplot {
             colors: _config.colorScale,
             containerWidth: _config.containerWidth || 500,
             containerHeight: _config.containerHeight || 200,
-            margin: _config.margin || {top: 25, right: 20, bottom: 20, left: 40},
+            margin: _config.margin || {top: 25, right: 20, bottom: 20, left: 35},
             tooltipPadding: _config.tooltipPadding || 15
         }
         this.data = _data;

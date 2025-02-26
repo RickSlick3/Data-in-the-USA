@@ -11,7 +11,7 @@ class ChoroplethMap {
     constructor(_config, _data, cdcData) {
         this.config = {
             parentElement: _config.parentElement,
-            containerWidth: _config.containerWidth || 1000,
+            containerWidth: _config.containerWidth || 1100,
             containerHeight: _config.containerHeight || 500,
             margin: _config.margin || {top: 10, right: 10, bottom: 10, left: 10},
             tooltipPadding: 10,
