@@ -77,6 +77,8 @@ const Dashboard = () => {
             d.percent_stroke = +d.percent_stroke;
             d.percent_coronary_heart_disease = +d.percent_coronary_heart_disease;
             d.percent_high_blood_pressure = +d.percent_high_blood_pressure;
+            d.percent_smoking = +d.percent_smoking;
+            d.percent_inactve = +d.percent_inactive;
         });
         // filter out rows with -1 in any relevant column
         const columnsToCheck = [
@@ -84,7 +86,9 @@ const Dashboard = () => {
             'percent_high_cholesterol',
             'percent_stroke',
             'percent_coronary_heart_disease',
-            'percent_high_blood_pressure'
+            'percent_high_blood_pressure',
+            'percent_smoking',
+            'percent_inactive'
         ];
         const newData = data.filter(d => {
             return columnsToCheck.every(col => d[col] !== -1);
@@ -129,10 +133,12 @@ const Dashboard = () => {
 
             <ul className="legend flex gap-2 text-[12px] my-3">
                 <span className='font-bold'>Columns:</span>
-                <li className={`legend-btn border px-1 ${activeCol == "percent_high_cholesterol" ? 'bg-[#bbb]' : ''}`} col="phc" onClick={() => {changeColumn("percent_high_cholesterol");}}>High Cholesterol</li>
-                <li className={`legend-btn border px-1 ${activeCol == "percent_stroke" ? 'bg-[#bbb]' : ''}`} col="ps" onClick={() => {changeColumn("percent_stroke");}}>Stroke</li>
-                <li className={`legend-btn border px-1 ${activeCol == "percent_coronary_heart_disease" ? 'bg-[#bbb]' : ''}`} col="pchd" onClick={() => {changeColumn("percent_coronary_heart_disease");}}>Coranary Heart Disease</li>
-                <li className={`legend-btn border px-1 ${activeCol == "percent_high_blood_pressure" ? 'bg-[#bbb]' : ''}`} col="phbp" onClick={() => {changeColumn("percent_high_blood_pressure");}}>High Blood Pressure</li>
+                <li className={`legend-btn border px-1 ${activeCol == "percent_stroke" ? 'bg-gray-300' : ''}`} col="ps" onClick={() => {changeColumn("percent_stroke");}}>Stroke</li>
+                <li className={`legend-btn border px-1 ${activeCol == "percent_high_cholesterol" ? 'bg-gray-300' : ''}`} col="phc" onClick={() => {changeColumn("percent_high_cholesterol");}}>High Cholesterol</li>
+                <li className={`legend-btn border px-1 ${activeCol == "percent_coronary_heart_disease" ? 'bg-gray-300' : ''}`} col="pchd" onClick={() => {changeColumn("percent_coronary_heart_disease");}}>Coranary Heart Disease</li>
+                <li className={`legend-btn border px-1 ${activeCol == "percent_high_blood_pressure" ? 'bg-gray-300' : ''}`} col="phbp" onClick={() => {changeColumn("percent_high_blood_pressure");}}>High Blood Pressure</li>
+                <li className={`legend-btn border px-1 ${activeCol == "percent_smoking" ? 'bg-gray-300' : ''}`} col="ps" onClick={() => {changeColumn("percent_smoking");}}>Smoking</li>
+                <li className={`legend-btn border px-1 ${activeCol == "percent_inactive" ? 'bg-gray-300' : ''}`} col="pi" onClick={() => {changeColumn("percent_inactive");}}>Physically Inactive</li>
             </ul>
 
             <div className="flex">
