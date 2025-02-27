@@ -188,7 +188,7 @@ class Histplot {
                 .style('cursor', 'pointer');
     
         bars
-            .on('mouseover', (event,d) => {
+            .on('mouseover.tooltip', (event,d) => {
                 // console.log(d); // log data in tooltip
                 d3.select('#tooltip-histplot')
                     .style('display', 'block')
@@ -200,11 +200,11 @@ class Histplot {
                         </div>
                     `);
             })
-            .on('mouseleave', () => {
+            .on('mouseleave.tooltip', () => {
                 d3.select('#tooltip-histplot').style('display', 'none');
             });
 
-        bars.on('mouseover', (event, d) => {
+        bars.on('mouseover.highlight', (event, d) => {
             // Check if an external callback has been set
             if (this.onBarClick) {
                 // Pass the bin range (d.x0 and d.x1) to the callback

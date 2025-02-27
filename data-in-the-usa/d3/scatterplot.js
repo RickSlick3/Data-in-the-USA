@@ -169,8 +169,9 @@ class Scatterplot {
         let dol = '';
         if (vis.xColName == "median_household_income") { dol = '$'; } 
         else { perc = '%'; }
+        
         circles
-            .on('mouseover', (event,d) => {
+            .on('mouseover.tooltip', (event,d) => {
                 // console.log(d); // log data in tooltip
                 d3.select('#tooltip-scatterplot')
                     .style('display', 'block')
@@ -182,11 +183,11 @@ class Scatterplot {
                         <div><i>${d.col}: ${d.value}%</i></div>
                     `);
             })
-            .on('mouseleave', () => {
+            .on('mouseleave.tooltip', () => {
                 d3.select('#tooltip-scatterplot').style('display', 'none');
             });
 
-        circles.on('mouseover', (event, d) => {
+        circles.on('mouseover.higlight', (event, d) => {
             // If an external callback is provided, pass the clicked circle's value.
             if (this.onCircleClick) {
                 this.onCircleClick(d.value);
