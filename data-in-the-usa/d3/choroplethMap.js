@@ -214,25 +214,25 @@ class ChoroplethMap {
 
     highlightByRange(rangeLow, rangeHigh) {
         const highlightColor = '#ffa500';  // Orange, for instance
-        this.g.selectAll('.county-boundary')
+        this.counties
             .attr('fill', d => {
             // If this county has a colValue in [rangeLow, rangeHigh),
             // highlight it orange. Otherwise, revert to normal scale.
-            const val = d.properties?.colValue;
-            if (val != null && val >= rangeLow && val < rangeHigh) {
-                return highlightColor;
-            } else if (val === -1) {
-                return '#c0c0c0';
-            } else if (val != null) {
-                return this.colorScale(val);
-            } else {
-                return 'url(#lightstripe)';
-            }
+                const val = d.properties?.colValue;
+                if (val != null && val >= rangeLow && val < rangeHigh) {
+                    return highlightColor;
+                } else if (val === -1) {
+                    return '#c0c0c0';
+                } else if (val != null) {
+                    return this.colorScale(val);
+                } else {
+                    return 'url(#lightstripe)';
+                }
         });
     }
 
     resetHighlight() {
-        this.g.selectAll('.county-boundary')
+        this.counties
             .attr('fill', d => {
                 const val = d.properties?.colValue;
                 if (val === -1) return '#c0c0c0';

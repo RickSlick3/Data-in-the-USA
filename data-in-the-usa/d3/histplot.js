@@ -175,7 +175,7 @@ class Histplot {
             //     d3.select(this).classed('active', !isActive); // Add class to style active filters with CSS
             // });
 
-        const bars = vis.chart.selectAll('.bar')
+        vis.bars = vis.chart.selectAll('.bar')
             .data(vis.bins)
             .join('rect')
                 .attr('class', 'bar')
@@ -187,7 +187,7 @@ class Histplot {
                 .attr('fill', d => vis.colorScale(vis.yColName))
                 .style('cursor', 'pointer');
     
-        bars
+        vis.bars
             .on('mouseover.tooltip', (event,d) => {
                 // console.log(d); // log data in tooltip
                 d3.select('#tooltip-histplot')
@@ -204,14 +204,14 @@ class Histplot {
                 d3.select('#tooltip-histplot').style('display', 'none');
             });
 
-        bars.on('mouseover.highlight', (event, d) => {
+        vis.bars.on('mouseover.highlight', (event, d) => {
             // Check if an external callback has been set
             if (this.onBarIn) {
                 // Pass the bin range (d.x0 and d.x1) to the callback
                 this.onBarIn(d.x0, d.x1);
             }
         });
-        bars.on('mouseleave.highlight', (event, d) => {
+        vis.bars.on('mouseleave.highlight', (event, d) => {
             if (this.onBarOut) {
                 this.onBarOut();  // This callback should trigger a reset in the scatterplot.
             }
@@ -224,17 +224,13 @@ class Histplot {
 
     highlightBinForValue(value) {
         let vis = this;
-        // Remove any existing highlights from all bars.
-        vis.chart.selectAll('.bar')
+        vis.bars
             .attr('stroke', null)
             .attr('stroke-width', null);
-    
-        // Find the bin that includes the value.
-        const targetBin = vis.bins.find(b => value >= b.x0 && value < b.x1);
         
+            const targetBin = vis.bins.find(b => value >= b.x0 && value < b.x1);
         if (targetBin) {
-            // Highlight the matching bin by adding a stroke.
-            vis.chart.selectAll('.bar')
+            vis.bars
                 .filter(d => d === targetBin)
                 .attr('fill', '#ffa500');
         }
@@ -242,8 +238,7 @@ class Histplot {
 
     resetHighlight() {
         let vis = this;
-        vis.chart.selectAll('.bar')
-            .attr('fill', d => vis.colorScale(vis.yColName));
+        vis.bars.attr('fill', d => vis.colorScale(vis.yColName));
     }
 }
 export default Histplot

@@ -154,7 +154,7 @@ class Scatterplot {
         let vis = this;
 
         // Add circles
-        const circles = vis.chart.selectAll('.point')
+        vis.circles = vis.chart.selectAll('.point')
                 .data(vis.data, d => d.trail)
             .join('circle')
                 .attr('class', 'point')
@@ -171,7 +171,7 @@ class Scatterplot {
         if (vis.xColName == "median_household_income") { dol = '$'; } 
         else { perc = '%'; }
         
-        circles
+        vis.circles
             .on('mouseover.tooltip', (event,d) => {
                 // console.log(d); // log data in tooltip
                 d3.select('#tooltip-scatterplot')
@@ -188,13 +188,13 @@ class Scatterplot {
                 d3.select('#tooltip-scatterplot').style('display', 'none');
             });
 
-        circles.on('mouseover.higlight', (event, d) => {
+        vis.circles.on('mouseover.higlight', (event, d) => {
             // If an external callback is provided, pass the clicked circle's value.
             if (this.onCircleIn) {
                 this.onCircleIn(d.value, d.cnty_fips);
             }
         });
-        circles.on('mouseleave.highlight', (event, d) => {
+        vis.circles.on('mouseleave.highlight', (event, d) => {
             if (this.onCircleOut) {
                 this.onCircleOut();  // This callback should trigger a reset in the histogram.
             }
@@ -207,16 +207,12 @@ class Scatterplot {
 
     filterByRange(rangeLow, rangeHigh) {
         let vis = this;
-        // Define the highlight color (adjust as needed)
         const highlightColor = '#ffa500';
-        // Reset or update the fill color for all circles
-        vis.chart.selectAll('.point')
-            .attr('fill', d => {
-                // If the value is within the selected bin range, use the highlight color.
-                return (d.value >= rangeLow && d.value < rangeHigh) 
-                    ? highlightColor 
-                    : vis.config.colorScale(d.col);
-            });
+        vis.circles.attr('fill', d => {
+            return (d.value >= rangeLow && d.value < rangeHigh) 
+                ? highlightColor
+                : vis.config.colorScale(d.col);
+        });
     }
 
     resetFilter() {
@@ -226,19 +222,10 @@ class Scatterplot {
     }
 
     highlightCircleByFips(fipsCode) {
+        let vis = this;
         const highlightColor = '#ffa500';
-        // reset all circles to their default color
-        // this.chart.selectAll('.point')
-        //     .attr('fill', d => this.config.colorScale(d.col));
-
-        // Then select the circle(s) with the matching fipsCode
-        const circleSelection = this.chart.selectAll('.point')
-            .filter(d => d.cnty_fips === fipsCode);
-
-        // Move the matched circle(s) to the end of the <g>, effectively on top
+        const circleSelection = vis.circles.filter(d => d.cnty_fips === fipsCode);
         circleSelection.raise();
-
-        // Finally, highlight them in orange
         circleSelection.attr('fill', highlightColor);
     }
 
