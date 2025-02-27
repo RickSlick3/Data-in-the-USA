@@ -72,6 +72,8 @@ class ChoroplethMap {
             d3.select("#legend").remove();
             d3.select("#legend-axis").remove();
             d3.select("#defs").remove();
+            d3.select("#state-borders").remove();
+            d3.select("#counties").remove();
         }
         if (d3.select("#map-title")) { d3.select("#map-title").remove(); }
 
