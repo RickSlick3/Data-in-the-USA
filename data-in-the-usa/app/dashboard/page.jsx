@@ -113,23 +113,22 @@ const Dashboard = () => {
                 choroplethRef.current.updateVis();
             }
 
-            // In your useEffect in page.jsx, after creating/updating your visualizations:
-            scatterplotRef.current.onCircleClick = (value) => {
-                // When hovering over a circle, highlight the corresponding histogram bin.
-                if (histplotRef.current) {
-                    histplotRef.current.highlightBinForValue(value);
-                }
-            };
-            
-            histplotRef.current.onBarIn = (x0, x1) => {
-                // When hovering over a bar, filter circles in the scatterplot
-                scatterplotRef.current.filterByRange(x0, x1);
-            };
-            
-            histplotRef.current.onBarOut = () => {
-                // When mouse leaves a bar, reset scatterplot color
-                scatterplotRef.current.resetFilter();
-            };
+            if (!scatterplotRef.current || !histplotRef.current || choroplethRef.current) {
+                histplotRef.current.onBarIn = (x0, x1) => {
+                    // Highlight circles in the scatterplot
+                    scatterplotRef.current.filterByRange(x0, x1);
+                    // Also highlight counties in the map
+                    choroplethRef.current.highlightByRange(x0, x1);
+                };
+                
+                histplotRef.current.onBarOut = () => {
+                    // Reset scatterplot circles
+                    scatterplotRef.current.resetFilter();
+                    // Reset map counties
+                    choroplethRef.current.resetHighlight();
+                };
+            }
+
         })
         .catch(error => console.error(error));
 

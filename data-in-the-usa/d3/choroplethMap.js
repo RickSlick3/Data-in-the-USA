@@ -126,7 +126,7 @@ class ChoroplethMap {
             .attr("class", "county-boundary")
             .attr('fill', d => {
                 if (d.properties.colValue === -1) {
-                    return '#ff9195';
+                    return '#c0c0c0';
                 } else if (d.properties.colValue) {
                     return vis.colorScale(d.properties.colValue);
                 } else {
@@ -204,6 +204,36 @@ class ChoroplethMap {
             .datum(topojson.mesh(vis.us, vis.us.objects.states, function(a, b) { return a !== b; }))
             .attr("id", "state-borders")
             .attr("d", vis.path);
+    }
+
+    highlightByRange(rangeLow, rangeHigh) {
+        const highlightColor = '#ffa500';  // Orange, for instance
+        this.g.selectAll('.county-boundary')
+            .attr('fill', d => {
+            // If this county has a colValue in [rangeLow, rangeHigh),
+            // highlight it orange. Otherwise, revert to normal scale.
+            const val = d.properties?.colValue;
+            if (val != null && val >= rangeLow && val < rangeHigh) {
+                return highlightColor;
+            } else if (val === -1) {
+                return '#ff9195'; // your "no data" color
+            } else if (val != null) {
+                return this.colorScale(val);
+            } else {
+                return 'url(#lightstripe)';
+            }
+        });
+    }
+
+    resetHighlight() {
+        this.g.selectAll('.county-boundary')
+            .attr('fill', d => {
+                const val = d.properties?.colValue;
+                if (val === -1) return '#ff9195';
+                else if (val != null) return this.colorScale(val);
+                else return 'url(#lightstripe)';
+            }
+        );
     }
 }
 
