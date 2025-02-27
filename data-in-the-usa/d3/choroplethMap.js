@@ -19,6 +19,7 @@ class ChoroplethMap {
             legendLeft: 100,
             legendRectHeight: 200, 
             legendRectWidth: 12,
+            scaleX: -65,
         }
         this.geoData = _data;
         this.cdcData = cdcData;
@@ -57,7 +58,7 @@ class ChoroplethMap {
 
         // Draw the vertical legend rectangle filled with the gradient
         vis.svg.append("rect")
-            .attr('transform', 'translate(-50, 0)')
+            .attr('transform', `translate(${vis.config.scaleX}, 0)`)
             .attr("x", vis.config.legendLeft)
             .attr("y", vis.config.containerHeight - vis.config.legendBottom - vis.config.legendRectHeight)
             .attr("width", vis.config.legendRectWidth)
@@ -104,9 +105,11 @@ class ChoroplethMap {
             .map(d => d.properties.colValue)
             .filter(val => val !== -1);
 
+        // const lowValue = vis.colName == "median_household_income" || vis.colName == "poverty_perc" ? d3.min(validValues) : 0;
+
         vis.colorScale = d3.scaleLinear()
             // use 0 as min to emphasize the higher percents
-            .domain([0, d3.max(validValues)]) // d3.min(validValues)
+            .domain([0, d3.max(validValues)]) // replace 0 with lowValue
             .range(['#39FF14', '#000'])
             .interpolate(d3.interpolateHcl);
 
@@ -165,7 +168,7 @@ class ChoroplethMap {
         vis.svg.append("g")
             .attr("id", "legend-axis")
             .attr("class", "legend-axis")
-            .attr("transform", `translate(${vis.config.legendLeft + vis.config.legendRectWidth - 50}, ${vis.config.containerHeight - vis.config.legendBottom - vis.config.legendRectHeight})`)
+            .attr("transform", `translate(${vis.config.legendLeft + vis.config.legendRectWidth + vis.config.scaleX}, ${vis.config.containerHeight - vis.config.legendBottom - vis.config.legendRectHeight})`)
             .call(legendAxis);
 
         vis.renderVis();
@@ -174,11 +177,15 @@ class ChoroplethMap {
     renderVis() {
         let vis = this;
         
+        let perc = '';
+        let dol = '';
+        if (vis.colName == "median_household_income") { dol = '$'; } 
+        else { perc = '%'; }
         vis.counties
             .on('mouseover', (event,d) => {
                 console.log(d);
                 // console.log(event);
-                const percentValue = d.properties.colValue && d.properties.colValue != -1 ? `${d.properties.colName}: <strong>${d.properties.colValue}</strong>%</sup>` : 'No data available'; 
+                const percentValue = d.properties.colValue && d.properties.colValue != -1 ? `${d.properties.colName}: <strong>${dol}${d.properties.colValue}${perc}</strong></sup>` : 'No data available'; 
                 d3.select('#tooltip-choropleth')
                     .style('display', 'block')
                     .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')   

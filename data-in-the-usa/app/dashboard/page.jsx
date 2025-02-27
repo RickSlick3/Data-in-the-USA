@@ -161,7 +161,7 @@ const Dashboard = () => {
             <div className='flex gap-16'>
                 <div className='flex flex-col my-3'>
                     <ul className="legend flex gap-2 text-[12px]">
-                        <span className='font-bold text-[14px]'>Health Columns:</span>
+                        <span className='font-bold text-[14px]'>Health:</span>
                         <li className={`legend-btn border px-1 ${activeCol == "percent_stroke" ? 'bg-gray-300' : ''}`} col="ps" onClick={() => {changeYColumn("percent_stroke");}}>Stroke</li>
                         <li className={`legend-btn border px-1 ${activeCol == "percent_high_cholesterol" ? 'bg-gray-300' : ''}`} col="phc" onClick={() => {changeYColumn("percent_high_cholesterol");}}>High Cholesterol</li>
                         <li className={`legend-btn border px-1 ${activeCol == "percent_coronary_heart_disease" ? 'bg-gray-300' : ''}`} col="pchd" onClick={() => {changeYColumn("percent_coronary_heart_disease");}}>Heart Disease</li>
@@ -170,14 +170,14 @@ const Dashboard = () => {
                         <li className={`legend-btn border px-1 ${activeCol == "percent_inactive" ? 'bg-gray-300' : ''}`} col="pi" onClick={() => {changeYColumn("percent_inactive");}}>Physically Inactive</li>
                     </ul>
                     <ul className="legend flex gap-2 text-[12px] my-3">
-                        <span className='font-bold text-[14px]'>Wealth Columns:</span>
+                        <span className='font-bold text-[14px]'>Wealth:</span>
                         <li className={`legend-btn border px-1 ${activeXCol == "median_household_income" ? 'bg-gray-300' : ''}`} col="mhi" onClick={() => {changeXColumn("median_household_income");}}>Median Household Income</li>
-                        <li className={`legend-btn border px-1 ${activeXCol == "poverty_perc" ? 'bg-gray-300' : ''}`} col="pp" onClick={() => {changeXColumn("poverty_perc");}}>Poverty</li>
+                        <li className={`legend-btn border px-1 ${activeXCol == "poverty_perc" ? 'bg-gray-300' : ''}`} col="pp" onClick={() => {changeXColumn("poverty_perc");}}>Poverty Percent</li>
                     </ul>
                 </div>
                 <div className='flex flex-col'>
                     <ul className="legend flex gap-2 text-[12px] my-3">
-                        <span className='font-bold text-[14px]'>Highlight on Map:</span>
+                        <span className='font-bold text-[14px]'>Show Wealth Distribution on Map:</span>
                         <li className='legend-btn border px-1' onClick={() => {mapWealth("median_household_income");}}>Median Household Income</li>
                         <li className='legend-btn border px-1' onClick={() => {mapWealth("poverty_perc");}}>Poverty Percent</li>
                     </ul>
