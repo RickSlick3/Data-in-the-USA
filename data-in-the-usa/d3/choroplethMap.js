@@ -216,7 +216,7 @@ class ChoroplethMap {
             if (val != null && val >= rangeLow && val < rangeHigh) {
                 return highlightColor;
             } else if (val === -1) {
-                return '#ff9195'; // your "no data" color
+                return '#c0c0c0';
             } else if (val != null) {
                 return this.colorScale(val);
             } else {
@@ -229,11 +229,41 @@ class ChoroplethMap {
         this.g.selectAll('.county-boundary')
             .attr('fill', d => {
                 const val = d.properties?.colValue;
-                if (val === -1) return '#ff9195';
+                if (val === -1) return '#c0c0c0';
                 else if (val != null) return this.colorScale(val);
                 else return 'url(#lightstripe)';
             }
         );
+    }
+
+    highlightCounty(fipsCode) {
+        const highlightColor = '#ffa500';
+        this.g.selectAll('.county-boundary')
+        .attr('fill', d => {
+            // If the county's ID or d.id matches fipsCode, fill orange; otherwise revert
+            if (d.id === fipsCode) {
+                return highlightColor;
+            } else if (d.properties.colValue === -1) {
+                return '#c0c0c0';
+            } else if (d.properties.colValue != null) {
+                return this.colorScale(d.properties.colValue);
+            } else {
+                return 'url(#lightstripe)';
+            }
+        });
+    }
+
+    // Revert all counties
+    resetHighlight() {
+        this.g.selectAll('.county-boundary')
+            .attr('fill', d => {
+            if (d.properties.colValue === -1) return '#c0c0c0';
+            else if (d.properties.colValue != null) {
+                return this.colorScale(d.properties.colValue);
+            } else {
+                return 'url(#lightstripe)';
+            }
+        });
     }
 }
 

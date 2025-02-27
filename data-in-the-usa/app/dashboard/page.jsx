@@ -72,19 +72,6 @@ const Dashboard = () => {
                     containerHeight: 200
                 }, dataRef.current);
                 scatterplotRef.current.updateVis();
-
-                scatterplotRef.current.onCircleIn = (value) => {
-                    // When hovering over a circle, highlight the corresponding bar in the histogram
-                    if (histplotRef.current) {
-                        histplotRef.current.highlightBinForValue(value);
-                    }
-                };
-                scatterplotRef.current.onCircleOut = () => {
-                    // When leaving a circle, reset histogram bars
-                    if (histplotRef.current) {
-                        histplotRef.current.resetHighlight();
-                    }
-                };
             }
 
             if (!histplotRef.current) {
@@ -96,14 +83,14 @@ const Dashboard = () => {
                 }, dataRef.current);
                 histplotRef.current.updateVis();
 
-                histplotRef.current.onBarIn = (x0, x1) => {
-                    // Highlight the relevant circles in scatterplot
-                    scatterplotRef.current.filterByRange(x0, x1);
-                };
-                histplotRef.current.onBarOut = () => {
-                    // Reset the scatterplot circles to their original color
-                    scatterplotRef.current.resetFilter();
-                };
+                // histplotRef.current.onBarIn = (x0, x1) => {
+                //     // Highlight the relevant circles in scatterplot
+                //     scatterplotRef.current.filterByRange(x0, x1);
+                // };
+                // histplotRef.current.onBarOut = () => {
+                //     // Reset the scatterplot circles to their original color
+                //     scatterplotRef.current.resetFilter();
+                // };
             }
         
             if (!choroplethRef.current) {
@@ -114,13 +101,32 @@ const Dashboard = () => {
             }
 
             if (!scatterplotRef.current || !histplotRef.current || choroplethRef.current) {
+                
+                scatterplotRef.current.onCircleIn = (value, fips) => {
+                    // When hovering over a circle, highlight the corresponding bar in the histogram
+                    if (histplotRef.current) {
+                        histplotRef.current.highlightBinForValue(value);
+                    }
+                    if (choroplethRef.current) {
+                        choroplethRef.current.highlightCounty(fips);
+                    }
+                };
+                scatterplotRef.current.onCircleOut = () => {
+                    // When leaving a circle, reset histogram bars
+                    if (histplotRef.current) {
+                        histplotRef.current.resetHighlight();
+                    }
+                    if (choroplethRef.current) {
+                        choroplethRef.current.resetHighlight();
+                    }
+                };
+
                 histplotRef.current.onBarIn = (x0, x1) => {
                     // Highlight circles in the scatterplot
                     scatterplotRef.current.filterByRange(x0, x1);
                     // Also highlight counties in the map
                     choroplethRef.current.highlightByRange(x0, x1);
                 };
-                
                 histplotRef.current.onBarOut = () => {
                     // Reset scatterplot circles
                     scatterplotRef.current.resetFilter();

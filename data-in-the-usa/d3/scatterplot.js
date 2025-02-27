@@ -129,7 +129,8 @@ class Scatterplot {
             display_name: d.display_name,
             xCol: +d[xCol],
             col: col,
-            value: +d[col]
+            value: +d[col],
+            cnty_fips: d.cnty_fips
         }));
 
         console.log(vis.data)
@@ -190,7 +191,7 @@ class Scatterplot {
         circles.on('mouseover.higlight', (event, d) => {
             // If an external callback is provided, pass the clicked circle's value.
             if (this.onCircleIn) {
-                this.onCircleIn(d.value);
+                this.onCircleIn(d.value, d.cnty_fips);
             }
         });
         circles.on('mouseleave.highlight', (event, d) => {
