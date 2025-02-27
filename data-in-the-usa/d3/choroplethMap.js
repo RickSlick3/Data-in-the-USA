@@ -204,7 +204,12 @@ class ChoroplethMap {
                 if (this.onCountyOut) { this.onCountyOut(); }
             });
 
-        
+        vis.counties.on('click.toggle', function(event, d) {
+            // Toggle the county's selected state
+            d.properties.selected = !d.properties.selected;
+            // Update opacity for all counties based on the new selection state
+            vis.updateCountyOpacity();
+            });
 
         vis.g.append("path")
             .datum(topojson.mesh(vis.us, vis.us.objects.states, function(a, b) { return a !== b; }))
@@ -270,6 +275,45 @@ class ChoroplethMap {
                 return 'url(#lightstripe)';
             }
         });
+    }
+
+    updateCountyOpacity() {
+        const vis = this;
+        // Check if any county is selected either by click or histogram
+        let anySelected = false;
+        vis.g.selectAll('.county-boundary').each(function(d) {
+            if (d.properties.selected || d.properties.histSelected) {
+                anySelected = true;
+            }
+        });
+        // Update opacity: if any county is selected, non-selected counties are dimmed
+        vis.g.selectAll('.county-boundary')
+            .style('opacity', function(d) {
+                if (anySelected) {
+                    return (d.properties.selected || d.properties.histSelected) ? 1 : 0.3;
+                } else {
+                    return 1;
+                }
+        });
+    }
+
+    applyHistSelection(selectedBins) {
+        const vis = this;
+        // For each county, check if its value is within any selected bin range
+        vis.g.selectAll('.county-boundary')
+            .each(function(d) {
+                // If no bins are selected, clear the histogram selection flag
+                if (selectedBins.length === 0) {
+                    d.properties.histSelected = false;
+                } else {
+                // Set to true if the county's colValue falls within any selected bin
+                d.properties.histSelected = selectedBins.some(bin => 
+                    d.properties.colValue >= bin.x0 && d.properties.colValue < bin.x1
+                );
+                }
+            });
+        // Update opacities based on the new flags
+        vis.updateCountyOpacity();
     }
 }
 

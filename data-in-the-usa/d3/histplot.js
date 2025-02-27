@@ -167,6 +167,14 @@ class Histplot {
             }
         });
 
+        vis.bars.on('click.toggle', function(event, d) {
+            d.selected = !d.selected;
+            // Call the external callback if defined, passing the bin range and new state
+            if (vis.onBarClick) {
+                vis.onBarClick(d.x0, d.x1, d.selected);
+            }
+        });
+
         // Update axes
         vis.xAxisG.call(vis.xAxis);
         vis.yAxisG.call(vis.yAxis);

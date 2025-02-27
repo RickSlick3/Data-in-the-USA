@@ -63,6 +63,8 @@ const Dashboard = () => {
                 choroplethRef.current.updateVis();
             }
 
+            const selectedHistBins = [];
+
             if (!scatterplotRef.current || !histplotRef.current || choroplethRef.current) {
                 
                 scatterplotRef.current.onCircleIn = (value, fips) => {
@@ -81,6 +83,19 @@ const Dashboard = () => {
                 histplotRef.current.onBarOut = () => {
                     scatterplotRef.current.resetFilter();
                     choroplethRef.current.resetHighlight();
+                };
+                histplotRef.current.onBarClick = (x0, x1, isSelected) => {
+                    // Check if the bin is already selected
+                    const index = selectedHistBins.findIndex(bin => bin.x0 === x0 && bin.x1 === x1);
+                    if (isSelected && index === -1) {
+                        // Add the bin range if it's being selected
+                        selectedHistBins.push({ x0, x1 });
+                    } else if (!isSelected && index > -1) {
+                        // Remove the bin range if it's being unselected
+                        selectedHistBins.splice(index, 1);
+                    }
+                    // Call the choropleth method to update histogram-based selection
+                    choroplethRef.current.applyHistSelection(selectedHistBins);
                 };
 
                 choroplethRef.current.onCountyIn = (fipsCode, value) => {
@@ -173,7 +188,11 @@ const Dashboard = () => {
                 <h1 className="text-2xl font-bold font-Outfit">Health's Relationship with Wealth</h1>
                 <div className='text-xs leading-[1]'>Data from <a className='text-gray-500 underline' target='_blank' href="https://www.cdc.gov/heart-disease-stroke-atlas/about/?CDC_AAref_Val=https://www.cdc.gov/dhdsp/maps/atlas/index.htm">the US Heart and Stroke Atlas</a></div>
             </div>
-            
+            <div className="max-w-5xl">
+                <p className="text-sm leading-[1.4]">
+                    Select more options from the Health and Wealth rows below to see the correlation, distribution, and spatial distribution on the map to the right. Hover over points, bars, or countis to see corresponding values in the other visuals. Click on the visuals to see them on the map more clearly.
+                </p>
+            </div>            
             {/* This is where the D3 chart will be rendered */}
             <div className='flex gap-16'>
                 <div className='flex flex-col my-3'>
