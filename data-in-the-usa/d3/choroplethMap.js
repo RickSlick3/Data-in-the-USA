@@ -195,10 +195,16 @@ class ChoroplethMap {
                         <div class="tooltip-title">${d.properties.name}</div>
                         <div>${percentValue}</div>
                     `);
+                if (this.onCountyIn && d.id && d.properties.colValue !== undefined) {
+                    this.onCountyIn(d.id, d.properties.colValue);
+                }
             })
             .on('mouseleave', () => {
                 d3.select('#tooltip-choropleth').style('display', 'none');
+                if (this.onCountyOut) { this.onCountyOut(); }
             });
+
+        
 
         vis.g.append("path")
             .datum(topojson.mesh(vis.us, vis.us.objects.states, function(a, b) { return a !== b; }))

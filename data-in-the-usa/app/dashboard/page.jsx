@@ -133,6 +133,19 @@ const Dashboard = () => {
                     // Reset map counties
                     choroplethRef.current.resetHighlight();
                 };
+
+                choroplethRef.current.onCountyIn = (fipsCode, value) => {
+                    // Highlight the bar in the histogram
+                    histplotRef.current.highlightBinForValue(value);
+                
+                    // Highlight the circle in the scatterplot
+                    scatterplotRef.current.highlightCircleByFips(fipsCode);
+                };
+                choroplethRef.current.onCountyOut = () => {
+                    // Reset both
+                    histplotRef.current.resetHighlight();
+                    scatterplotRef.current.resetHighlight();
+                };
             }
 
         })

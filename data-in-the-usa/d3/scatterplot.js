@@ -224,6 +224,28 @@ class Scatterplot {
         vis.chart.selectAll('.point')
             .attr('fill', d => vis.config.colorScale(d.col));
     }
+
+    highlightCircleByFips(fipsCode) {
+        const highlightColor = '#ffa500';
+        // reset all circles to their default color
+        // this.chart.selectAll('.point')
+        //     .attr('fill', d => this.config.colorScale(d.col));
+
+        // Then select the circle(s) with the matching fipsCode
+        const circleSelection = this.chart.selectAll('.point')
+            .filter(d => d.cnty_fips === fipsCode);
+
+        // Move the matched circle(s) to the end of the <g>, effectively on top
+        circleSelection.raise();
+
+        // Finally, highlight them in orange
+        circleSelection.attr('fill', highlightColor);
+    }
+
+    resetHighlight() {
+        this.chart.selectAll('.point')
+            .attr('fill', d => this.config.colorScale(d.col));
+    }
 }
 
 export default Scatterplot;
