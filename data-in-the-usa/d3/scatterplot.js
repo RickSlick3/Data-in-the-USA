@@ -216,6 +216,24 @@ class Scatterplot {
         this.chart.selectAll('.point')
             .attr('fill', d => this.config.colorScale(d.col));
     }
+
+    enlargeCircleByFips(fipsCode) {
+        let vis = this;
+        const circleSelection = vis.circles.filter(d => d.cnty_fips === fipsCode);
+        circleSelection.raise();
+        circleSelection.transition().duration(200).attr('r', 5); // Increase radius (default is 2)
+    }
+    
+    // Resets the radius of either a specific circle or all circles to the default size
+    resetCircleRadiusByFips(fipsCode) {
+        let vis = this;
+        if (fipsCode) {
+            const circleSelection = vis.circles.filter(d => d.cnty_fips === fipsCode);
+            circleSelection.transition().duration(200).attr('r', 2);
+        } else {
+            vis.circles.transition().duration(200).attr('r', 2);
+        }    
+    }
 }
 
 export default Scatterplot;

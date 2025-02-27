@@ -99,11 +99,12 @@ const Dashboard = () => {
                 };
 
                 choroplethRef.current.onCountyIn = (fipsCode, value) => {
+                    scatterplotRef.current.enlargeCircleByFips(fipsCode);
                     histplotRef.current.highlightBinForValue(value);
-                
                     scatterplotRef.current.highlightCircleByFips(fipsCode);
                 };
                 choroplethRef.current.onCountyOut = () => {
+                    scatterplotRef.current.resetCircleRadiusByFips();
                     histplotRef.current.resetHighlight();
                     scatterplotRef.current.resetHighlight();
                 };
