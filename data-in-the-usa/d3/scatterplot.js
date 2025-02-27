@@ -106,23 +106,6 @@ class Scatterplot {
             .attr('dy', '.71em')
             .text(vis.yColName.replace(/_/g, ' '));
 
-        // Transform the data from wide to long format
-        // const cols = [
-        //     // 'percent_high_cholesterol', 
-        //     // 'percent_stroke', 
-        //     // 'percent_coronary_heart_disease', 
-        //     'percent_high_blood_pressure'
-        // ];
-        
-        // vis.data = vis.data.flatMap(d =>
-        //     cols.map(col => ({
-        //         display_name: d.display_name,
-        //         median_household_income: +d.median_household_income,
-        //         col: col,
-        //         value: +d[col]
-        //     }))
-        // );
-
         const col = vis.yColName;
         const xCol = vis.xColName;
         vis.data = vis.data.map(d => ({

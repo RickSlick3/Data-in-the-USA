@@ -17,37 +17,6 @@ const Dashboard = () => {
     const singleGreen = '#00700b';
 
     useEffect(() => {
-        // d3.csv('/data/cdc.csv').then(_data => {
-        //     dataRef.current = cleanData(_data);
-        //     console.log('Data loading complete. Work with dataset.');
-
-        //     // Initialize color scale
-        //     const colorScale = d3.scaleOrdinal()
-        //         .range([singleGreen])
-        //         .domain(columns);
-
-        //     if (!scatterplotRef.current) {
-        //         scatterplotRef.current = new Scatterplot({ 
-        //             parentElement: '#scatterplot',
-        //             colorScale: colorScale,
-        //             // filter: colFilter,
-        //             containerWidth: 300,
-        //             containerHeight: 200
-        //         }, dataRef.current);
-        //         scatterplotRef.current.updateVis();
-        //     }
-
-        //     if (!histplotRef.current) {
-        //         histplotRef.current = new Histplot({
-        //             parentElement: '#histplot',
-        //             colorScale: colorScale,
-        //             containerWidth: 300,
-        //             containerHeight: 300
-        //         }, dataRef.current);
-        //         histplotRef.current.updateVis();
-        //     }
-        // })
-        // .catch(error => console.error(error));
         
         Promise.all([
             d3.json('/data/counties-10m.json'),
@@ -97,20 +66,16 @@ const Dashboard = () => {
             if (!scatterplotRef.current || !histplotRef.current || choroplethRef.current) {
                 
                 scatterplotRef.current.onCircleIn = (value, fips) => {
-                    // When hovering over a circle, highlight the corresponding bar in the histogram
                     histplotRef.current.highlightBinForValue(value);
                     choroplethRef.current.highlightCounty(fips);
                 };
                 scatterplotRef.current.onCircleOut = () => {
-                    // When leaving a circle, reset histogram bars
                     histplotRef.current.resetHighlight();
                     choroplethRef.current.resetHighlight();
                 };
 
                 histplotRef.current.onBarIn = (x0, x1) => {
-                    // Highlight circles in the scatterplot
                     scatterplotRef.current.filterByRange(x0, x1);
-                    // Also highlight counties in the map
                     choroplethRef.current.highlightByRange(x0, x1);
                 };
                 histplotRef.current.onBarOut = () => {
@@ -119,10 +84,8 @@ const Dashboard = () => {
                 };
 
                 choroplethRef.current.onCountyIn = (fipsCode, value) => {
-                    // Highlight the bar in the histogram
                     histplotRef.current.highlightBinForValue(value);
                 
-                    // Highlight the circle in the scatterplot
                     scatterplotRef.current.highlightCircleByFips(fipsCode);
                 };
                 choroplethRef.current.onCountyOut = () => {
@@ -164,13 +127,6 @@ const Dashboard = () => {
 
 
     function changeYColumn(yColName) {
-        // const index = colFilter.indexOf(colName)
-        // index === -1 ? colFilter.push(colName) : colFilter.splice(index, 1);
-        // if (colFilter.length == 0) {
-        //     scatterplot.data = data;
-        // } else {
-        //     scatterplot.data = data.filter(d => difficultyFilter.includes(d.difficulty));
-        // }
         if (activeCol != yColName){
             console.log('changing y columns')
             setActiveCol(yColName);
@@ -191,13 +147,6 @@ const Dashboard = () => {
 
 
     function changeXColumn(xColName) {
-        // const index = colFilter.indexOf(colName)
-        // index === -1 ? colFilter.push(colName) : colFilter.splice(index, 1);
-        // if (colFilter.length == 0) {
-        //     scatterplot.data = data;
-        // } else {
-        //     scatterplot.data = data.filter(d => difficultyFilter.includes(d.difficulty));
-        // }
         if (activeXCol != xColName){
             console.log('changing x columns')
             setActiveXCol(xColName);

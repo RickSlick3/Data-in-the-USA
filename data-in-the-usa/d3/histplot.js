@@ -88,32 +88,6 @@ class Histplot {
             .attr('dy', '.71em')
             .text(`Dist. of \n ${vis.yColName.replace(/_/g, ' ')}`);
 
-        // Prepare data: count number of trails in each difficulty category
-        // i.e. [{ key: 'easy', count: 10 }, {key: 'intermediate', ...
-        // const aggregatedDataMap = d3.rollups(
-        //     vis.data, 
-        //     v => v.length, 
-        //     d => Math.floor(d.percent_stroke)
-        // );
-        // vis.aggregatedData = Array.from(aggregatedDataMap, ([key, count]) => ({ key, count }));
-        
-        // // Sort the aggregated data numerically by the key
-        // vis.aggregatedData.sort((a, b) => a.key - b.key);       
-
-        // const orderedKeys = ['Easy', 'Intermediate', 'Difficult'];
-        // vis.aggregatedData = vis.aggregatedData.sort((a,b) => {
-        // return orderedKeys.indexOf(a.key) - orderedKeys.indexOf(b.key);
-        // });
-
-        // // Specificy accessor functions
-        // vis.colorValue = d => d.key;
-        // vis.xValue = d => d.key;
-        // vis.yValue = d => d.count;
-
-        // // Set the scale input domains
-        // vis.xScale.domain(vis.aggregatedData.map(vis.xValue));
-        // vis.yScale.domain([0, d3.max(vis.aggregatedData, vis.yValue)]);
-
         // Get the extent of the column values
         const col = vis.yColName;
         const [min, max] = d3.extent(vis.data, d => d[col]);
@@ -150,30 +124,6 @@ class Histplot {
    */
     renderVis() {
         let vis = this;
-
-        // Add rectangles
-        // const bars = vis.chart.selectAll('.bar')
-        //     .data(vis.aggregatedData, vis.xValue)
-        // .join('rect')
-        //     .attr('class', 'bar')
-        //     .attr('x', d => vis.xScale(vis.xValue(d)))
-        //     .attr('width', vis.xScale.bandwidth())
-        //     .attr('height', d => vis.height - vis.yScale(vis.yValue(d)))
-        //     .attr('y', d => vis.yScale(vis.yValue(d)))
-        //     .attr('fill', d => vis.colorScale('percent_stroke'));
-        
-            // .attr('fill', d => vis.colorScale(vis.colorValue(d)))
-            // .on('click', function(event, d) {
-            //     const isActive = difficultyFilter.includes(d.key);
-            //     if (isActive) {
-            //         difficultyFilter = difficultyFilter.filter(f => f !== d.key); // Remove filter
-            //     } else {
-            //         difficultyFilter.push(d.key); // Append filter
-            //     }
-            
-            //     filterData(); // Call global function to update scatter plot
-            //     d3.select(this).classed('active', !isActive); // Add class to style active filters with CSS
-            // });
 
         vis.bars = vis.chart.selectAll('.bar')
             .data(vis.bins)
