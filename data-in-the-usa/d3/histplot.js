@@ -206,9 +206,9 @@ class Histplot {
 
         bars.on('mouseover.highlight', (event, d) => {
             // Check if an external callback has been set
-            if (this.onBarClick) {
+            if (this.onBarIn) {
                 // Pass the bin range (d.x0 and d.x1) to the callback
-                this.onBarClick(d.x0, d.x1);
+                this.onBarIn(d.x0, d.x1);
             }
         });
         bars.on('mouseleave.highlight', (event, d) => {

@@ -17,9 +17,46 @@ const Dashboard = () => {
     const singleGreen = '#00700b';
 
     useEffect(() => {
-        d3.csv('/data/cdc.csv').then(_data => {
-            dataRef.current = cleanData(_data);
-            console.log('Data loading complete. Work with dataset.');
+        // d3.csv('/data/cdc.csv').then(_data => {
+        //     dataRef.current = cleanData(_data);
+        //     console.log('Data loading complete. Work with dataset.');
+
+        //     // Initialize color scale
+        //     const colorScale = d3.scaleOrdinal()
+        //         .range([singleGreen])
+        //         .domain(columns);
+
+        //     if (!scatterplotRef.current) {
+        //         scatterplotRef.current = new Scatterplot({ 
+        //             parentElement: '#scatterplot',
+        //             colorScale: colorScale,
+        //             // filter: colFilter,
+        //             containerWidth: 300,
+        //             containerHeight: 200
+        //         }, dataRef.current);
+        //         scatterplotRef.current.updateVis();
+        //     }
+
+        //     if (!histplotRef.current) {
+        //         histplotRef.current = new Histplot({
+        //             parentElement: '#histplot',
+        //             colorScale: colorScale,
+        //             containerWidth: 300,
+        //             containerHeight: 300
+        //         }, dataRef.current);
+        //         histplotRef.current.updateVis();
+        //     }
+        // })
+        // .catch(error => console.error(error));
+        
+        Promise.all([
+            d3.json('/data/counties-10m.json'),
+            d3.csv('/data/cdc.csv')
+        ]).then(data => {
+            const geoData = data[0];
+            const cdcData = data[1];
+
+            dataRef.current = cleanData(cdcData);
 
             // Initialize color scale
             const colorScale = d3.scaleOrdinal()
@@ -35,14 +72,20 @@ const Dashboard = () => {
                     containerHeight: 200
                 }, dataRef.current);
                 scatterplotRef.current.updateVis();
-            }
 
-            // scatterplotRef.current.onCircleClick = (value) => {
-            //     // Use the histogram instance to highlight the bin for this value.
-            //     if (histplotRef.current) {
-            //         histplotRef.current.highlightBinForValue(value);
-            //     }
-            // };
+                scatterplotRef.current.onCircleIn = (value) => {
+                    // When hovering over a circle, highlight the corresponding bar in the histogram
+                    if (histplotRef.current) {
+                        histplotRef.current.highlightBinForValue(value);
+                    }
+                };
+                scatterplotRef.current.onCircleOut = () => {
+                    // When leaving a circle, reset histogram bars
+                    if (histplotRef.current) {
+                        histplotRef.current.resetHighlight();
+                    }
+                };
+            }
 
             if (!histplotRef.current) {
                 histplotRef.current = new Histplot({
@@ -52,47 +95,16 @@ const Dashboard = () => {
                     containerHeight: 300
                 }, dataRef.current);
                 histplotRef.current.updateVis();
+
+                histplotRef.current.onBarIn = (x0, x1) => {
+                    // Highlight the relevant circles in scatterplot
+                    scatterplotRef.current.filterByRange(x0, x1);
+                };
+                histplotRef.current.onBarOut = () => {
+                    // Reset the scatterplot circles to their original color
+                    scatterplotRef.current.resetFilter();
+                };
             }
-
-            // histplotRef.current.onBarClick = (x0, x1) => {
-            //     // Call scatterplot filtering method to update circle colors
-            //     scatterplotRef.current.filterByRange(x0, x1);
-            // };
-
-            // In your useEffect in page.jsx, after creating/updating your visualizations:
-            scatterplotRef.current.onCircleClick = (value) => {
-                // When hovering over a circle, highlight the corresponding histogram bin.
-                if (histplotRef.current) {
-                histplotRef.current.highlightBinForValue(value);
-                }
-            };
-            
-            scatterplotRef.current.onCircleOut = () => {
-                // When no longer hovering over a circle, reset histogram highlighting.
-                if (histplotRef.current) {
-                histplotRef.current.resetHighlight();
-                }
-            };
-            
-            histplotRef.current.onBarClick = (x0, x1) => {
-                // When hovering over a bar, filter scatterplot circles.
-                scatterplotRef.current.filterByRange(x0, x1);
-            };
-            
-            histplotRef.current.onBarOut = () => {
-                // When no longer hovering over a bar, reset scatterplot filtering.
-                scatterplotRef.current.resetFilter();
-            };
-        })
-        .catch(error => console.error(error));
-        
-        // choropleth map
-        Promise.all([
-            d3.json('/data/counties-10m.json'),
-            d3.csv('/data/cdc.csv')
-        ]).then(data => {
-            const geoData = data[0];
-            const cdcData = data[1];
         
             if (!choroplethRef.current) {
                 choroplethRef.current = new ChoroplethMap({ 
@@ -100,6 +112,24 @@ const Dashboard = () => {
                 }, geoData, cdcData);
                 choroplethRef.current.updateVis();
             }
+
+            // In your useEffect in page.jsx, after creating/updating your visualizations:
+            scatterplotRef.current.onCircleClick = (value) => {
+                // When hovering over a circle, highlight the corresponding histogram bin.
+                if (histplotRef.current) {
+                    histplotRef.current.highlightBinForValue(value);
+                }
+            };
+            
+            histplotRef.current.onBarIn = (x0, x1) => {
+                // When hovering over a bar, filter circles in the scatterplot
+                scatterplotRef.current.filterByRange(x0, x1);
+            };
+            
+            histplotRef.current.onBarOut = () => {
+                // When mouse leaves a bar, reset scatterplot color
+                scatterplotRef.current.resetFilter();
+            };
         })
         .catch(error => console.error(error));
 

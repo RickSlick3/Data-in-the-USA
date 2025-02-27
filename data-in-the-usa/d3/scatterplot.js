@@ -189,8 +189,8 @@ class Scatterplot {
 
         circles.on('mouseover.higlight', (event, d) => {
             // If an external callback is provided, pass the clicked circle's value.
-            if (this.onCircleClick) {
-                this.onCircleClick(d.value);
+            if (this.onCircleIn) {
+                this.onCircleIn(d.value);
             }
         });
         circles.on('mouseleave.highlight', (event, d) => {
@@ -198,16 +198,6 @@ class Scatterplot {
                 this.onCircleOut();  // This callback should trigger a reset in the histogram.
             }
         });
-        
-        // Update the axes/gridlines
-        // We use the second .call() to remove the axis and just show gridlines
-        // vis.xAxisG
-        //     .call(vis.xAxis)
-        //     .call(g => g.select('.domain').remove());
-
-        // vis.yAxisG
-        //     .call(vis.yAxis)
-        //     .call(g => g.select('.domain').remove())
 
         // update axis
         vis.xAxisG.call(vis.xAxis);
