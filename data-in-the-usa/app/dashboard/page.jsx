@@ -38,8 +38,6 @@ const Dashboard = () => {
                     parentElement: '#scatterplot',
                     colorScale: colorScale,
                     // filter: colFilter,
-                    containerWidth: 300,
-                    containerHeight: 200
                 }, dataRef.current);
                 scatterplotRef.current.updateVis();
             }
@@ -49,8 +47,6 @@ const Dashboard = () => {
                 histplotRef.current = new Histplot({
                     parentElement: '#histplot',
                     colorScale: colorScale,
-                    containerWidth: 300,
-                    containerHeight: 300
                 }, dataRef.current);
                 histplotRef.current.updateVis();
             }
