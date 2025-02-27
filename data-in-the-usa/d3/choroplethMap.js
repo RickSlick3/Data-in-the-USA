@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
-import topojson from '@/d3/topojson.v3'
+// import topojson from '@/d3/topojson.v3'
+import * as topojson from '@/d3/topojson.v3'
 
 class ChoroplethMap {
 
