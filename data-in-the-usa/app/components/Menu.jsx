@@ -8,7 +8,7 @@ export default function Menu({ children }) {
   return (
     <div className="flex h-screen">
       {/* Sidebar for large screens */}
-      <aside className="hidden lg:flex flex-col w-52 bg-dark-surface">
+      <aside className="hidden lg:flex flex-col flex-shrink-0 w-36 bg-dark-surface">
 
         <div className="p-4 text-2xl text-custom-white font-bold border-b font-Outfit">
           Data in the USA
@@ -23,7 +23,7 @@ export default function Menu({ children }) {
                 className="flex items-center space-x-2 p-4 hover:bg-light-surface"
               >
                 <svg
-                  className="w-5 h-5 text-custom-blue"
+                  className="w-5 h-5 text-custom-white"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -31,7 +31,7 @@ export default function Menu({ children }) {
                 >
                   <path d="M16 14V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 0 0 0-2h-1v-2a2 2 0 0 0 2-2ZM4 2h2v12H4V2Zm8 16H3a1 1 0 0 1 0-2h9v2Z" />
                 </svg>
-                <span className='font-Outfit text-custom-white'>Documentation</span>
+                <span className='font-Outfit text-custom-white'>Home</span>
               </Link>
             </li>
 
@@ -41,7 +41,7 @@ export default function Menu({ children }) {
                 className="flex items-center space-x-2 p-4 hover:bg-light-surface"
               >
                 <svg 
-                  className="w-5 h-5 text-custom-blue"
+                  className="w-5 h-5 text-custom-white"
                   aria-hidden="true" 
                   xmlns="http://www.w3.org/2000/svg" 
                   fill="currentColor" 
@@ -60,7 +60,7 @@ export default function Menu({ children }) {
                 className="flex items-center space-x-2 p-4 hover:bg-light-surface"
               >
                 <svg
-                  className="w-5 h-5 text-custom-blue"
+                  className="w-5 h-5 text-custom-white"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -120,7 +120,7 @@ export default function Menu({ children }) {
                   className="flex items-center space-x-2 p-4 hover:bg-light-surface"
                 >
                   <svg
-                    className="w-5 h-5 text-custom-blue"
+                    className="w-5 h-5 text-custom-white"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
@@ -138,7 +138,7 @@ export default function Menu({ children }) {
                   className="flex items-center space-x-2 p-4 hover:bg-light-surface"
                 >
                   <svg
-                    className="w-5 h-5 text-custom-blue"
+                    className="w-5 h-5 text-custom-white"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
@@ -157,7 +157,7 @@ export default function Menu({ children }) {
                   className="flex items-center space-x-2 p-4 hover:bg-light-surface"
                 >
                   <svg
-                    className="w-5 h-5 text-custom-blue"
+                    className="w-5 h-5 text-custom-white"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"

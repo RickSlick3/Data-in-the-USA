@@ -8,8 +8,6 @@ export default {
   theme: {
     extend: {
       colors: {
-        'custom-red': '#c62828',
-        'custom-blue': '#1565c0',
         'custom-white': '#f7f7f7',
         'light-surface': '#999999',
         'dark-surface': '#252525',
