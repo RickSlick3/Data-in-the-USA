@@ -22,7 +22,7 @@ class ChoroplethMap {
         }
         this.geoData = _data;
         this.cdcData = cdcData;
-        this.yColName = "percent_stroke";
+        this.colName = "percent_stroke";
         // this.config = _config;
         this.us = _data;
         // this.active = d3.select(null);
@@ -51,9 +51,18 @@ class ChoroplethMap {
 
         vis.g = vis.svg.append("g")
                 .attr('class', 'center-container center-items us-state')
-                .attr('transform', 'translate('+vis.config.margin.left+','+vis.config.margin.top+')')
+                .attr('transform', `translate(-75, ${vis.config.margin.top})`)
                 .attr('width', vis.width + vis.config.margin.left + vis.config.margin.right)
                 .attr('height', vis.height + vis.config.margin.top + vis.config.margin.bottom)
+
+        // Draw the vertical legend rectangle filled with the gradient
+        vis.svg.append("rect")
+            .attr('transform', 'translate(-50, 0)')
+            .attr("x", vis.config.legendLeft)
+            .attr("y", vis.config.containerHeight - vis.config.legendBottom - vis.config.legendRectHeight)
+            .attr("width", vis.config.legendRectWidth)
+            .attr("height", vis.config.legendRectHeight)
+            .style("fill", "url(#legend-gradient)");
     }
 
     updateVis() {
@@ -62,6 +71,7 @@ class ChoroplethMap {
         if (d3.select("#legend")) {
             d3.select("#legend").remove();
             d3.select("#legend-axis").remove();
+            d3.select("#defs").remove();
         }
         if (d3.select("#map-title")) { d3.select("#map-title").remove(); }
 
@@ -72,7 +82,7 @@ class ChoroplethMap {
             .attr("y", 30) // Adjust the y-position as needed
             .attr("text-anchor", "middle")
             .attr("class", "map-title font-bold")
-            .text(`Spacial Distribution of ${vis.yColName.replace(/_/g, ' ')}`);
+            .text(`Spacial Distribution of ${vis.colName.replace(/_/g, ' ')}`);
         
         // Combine both datasets by adding the population density to the TopoJSON file
         // console.log(geoData);
@@ -81,8 +91,8 @@ class ChoroplethMap {
             for (let i = 0; i < vis.cdcData.length; i++) {
                 if (d.id === vis.cdcData[i].cnty_fips) {
                     // assign a new property to d to use in the map
-                    d.properties.colValue = +vis.cdcData[i][vis.yColName];
-                    d.properties.yColName = vis.yColName
+                    d.properties.colValue = +vis.cdcData[i][vis.colName];
+                    d.properties.colName = vis.colName
                 }
             }
         });
@@ -122,7 +132,7 @@ class ChoroplethMap {
         /**
         * Here we will create the legend for the map
         */
-        const defs = vis.svg.append("defs");
+        const defs = vis.svg.append("defs").attr("id", "defs");
         const gradient = defs.append("linearGradient")
             .attr("id", "legend-gradient")
             // Set gradient direction: from bottom (low values) to top (high values)
@@ -140,15 +150,6 @@ class ChoroplethMap {
             .attr("offset", d => d.offset)
             .attr("stop-color", d => d.color);
 
-        // Draw the vertical legend rectangle filled with the gradient
-        // Adjust legend dimensions: e.g., a narrow width and a taller height.
-        vis.svg.append("rect")
-            .attr("x", vis.config.legendLeft)
-            .attr("y", vis.config.containerHeight - vis.config.legendBottom - vis.config.legendRectHeight)
-            .attr("width", vis.config.legendRectWidth)
-            .attr("height", vis.config.legendRectHeight)
-            .style("fill", "url(#legend-gradient)");
-
         // Create a scale for the legend axis using the same domain as your color scale
         //  the range is inverted because the vertical axis goes from bottom (low) to top (high)
         const legendAxisScale = d3.scaleLinear()
@@ -162,7 +163,7 @@ class ChoroplethMap {
         vis.svg.append("g")
             .attr("id", "legend-axis")
             .attr("class", "legend-axis")
-            .attr("transform", `translate(${vis.config.legendLeft + vis.config.legendRectWidth}, ${vis.config.containerHeight - vis.config.legendBottom - vis.config.legendRectHeight})`)
+            .attr("transform", `translate(${vis.config.legendLeft + vis.config.legendRectWidth - 50}, ${vis.config.containerHeight - vis.config.legendBottom - vis.config.legendRectHeight})`)
             .call(legendAxis);
 
         vis.renderVis();
@@ -175,7 +176,7 @@ class ChoroplethMap {
             .on('mouseover', (event,d) => {
                 console.log(d);
                 // console.log(event);
-                const percentValue = d.properties.colValue && d.properties.colValue != -1 ? `${d.properties.yColName}: <strong>${d.properties.colValue}</strong>%</sup>` : 'No data available'; 
+                const percentValue = d.properties.colValue && d.properties.colValue != -1 ? `${d.properties.colName}: <strong>${d.properties.colValue}</strong>%</sup>` : 'No data available'; 
                 d3.select('#tooltip-choropleth')
                     .style('display', 'block')
                     .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')   
