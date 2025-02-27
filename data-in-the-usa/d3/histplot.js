@@ -204,9 +204,46 @@ class Histplot {
                 d3.select('#tooltip-histplot').style('display', 'none');
             });
 
+        bars.on('mouseover', (event, d) => {
+            // Check if an external callback has been set
+            if (this.onBarClick) {
+                // Pass the bin range (d.x0 and d.x1) to the callback
+                this.onBarClick(d.x0, d.x1);
+            }
+        });
+        bars.on('mouseleave.highlight', (event, d) => {
+            if (this.onBarOut) {
+                this.onBarOut();  // This callback should trigger a reset in the scatterplot.
+            }
+        });
+
         // Update axes
         vis.xAxisG.call(vis.xAxis);
         vis.yAxisG.call(vis.yAxis);
+    }
+
+    highlightBinForValue(value) {
+        let vis = this;
+        // Remove any existing highlights from all bars.
+        vis.chart.selectAll('.bar')
+            .attr('stroke', null)
+            .attr('stroke-width', null);
+    
+        // Find the bin that includes the value.
+        const targetBin = vis.bins.find(b => value >= b.x0 && value < b.x1);
+        
+        if (targetBin) {
+            // Highlight the matching bin by adding a stroke.
+            vis.chart.selectAll('.bar')
+                .filter(d => d === targetBin)
+                .attr('fill', '#ffa500');
+        }
+    }
+
+    resetHighlight() {
+        let vis = this;
+        vis.chart.selectAll('.bar')
+            .attr('fill', d => vis.colorScale(vis.yColName));
     }
 }
 export default Histplot

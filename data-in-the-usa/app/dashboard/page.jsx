@@ -37,6 +37,13 @@ const Dashboard = () => {
                 scatterplotRef.current.updateVis();
             }
 
+            // scatterplotRef.current.onCircleClick = (value) => {
+            //     // Use the histogram instance to highlight the bin for this value.
+            //     if (histplotRef.current) {
+            //         histplotRef.current.highlightBinForValue(value);
+            //     }
+            // };
+
             if (!histplotRef.current) {
                 histplotRef.current = new Histplot({
                     parentElement: '#histplot',
@@ -46,6 +53,36 @@ const Dashboard = () => {
                 }, dataRef.current);
                 histplotRef.current.updateVis();
             }
+
+            // histplotRef.current.onBarClick = (x0, x1) => {
+            //     // Call scatterplot filtering method to update circle colors
+            //     scatterplotRef.current.filterByRange(x0, x1);
+            // };
+
+            // In your useEffect in page.jsx, after creating/updating your visualizations:
+            scatterplotRef.current.onCircleClick = (value) => {
+                // When hovering over a circle, highlight the corresponding histogram bin.
+                if (histplotRef.current) {
+                histplotRef.current.highlightBinForValue(value);
+                }
+            };
+            
+            scatterplotRef.current.onCircleOut = () => {
+                // When no longer hovering over a circle, reset histogram highlighting.
+                if (histplotRef.current) {
+                histplotRef.current.resetHighlight();
+                }
+            };
+            
+            histplotRef.current.onBarClick = (x0, x1) => {
+                // When hovering over a bar, filter scatterplot circles.
+                scatterplotRef.current.filterByRange(x0, x1);
+            };
+            
+            histplotRef.current.onBarOut = () => {
+                // When no longer hovering over a bar, reset scatterplot filtering.
+                scatterplotRef.current.resetFilter();
+            };
         })
         .catch(error => console.error(error));
         

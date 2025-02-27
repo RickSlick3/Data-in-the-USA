@@ -185,6 +185,18 @@ class Scatterplot {
             .on('mouseleave', () => {
                 d3.select('#tooltip-scatterplot').style('display', 'none');
             });
+
+        circles.on('mouseover', (event, d) => {
+            // If an external callback is provided, pass the clicked circle's value.
+            if (this.onCircleClick) {
+                this.onCircleClick(d.value);
+            }
+        });
+        circles.on('mouseleave.highlight', (event, d) => {
+            if (this.onCircleOut) {
+                this.onCircleOut();  // This callback should trigger a reset in the histogram.
+            }
+        });
         
         // Update the axes/gridlines
         // We use the second .call() to remove the axis and just show gridlines
@@ -199,6 +211,26 @@ class Scatterplot {
         // update axis
         vis.xAxisG.call(vis.xAxis);
         vis.yAxisG.call(vis.yAxis);
+    }
+
+    filterByRange(rangeLow, rangeHigh) {
+        let vis = this;
+        // Define the highlight color (adjust as needed)
+        const highlightColor = '#ffa500';
+        // Reset or update the fill color for all circles
+        vis.chart.selectAll('.point')
+            .attr('fill', d => {
+                // If the value is within the selected bin range, use the highlight color.
+                return (d.value >= rangeLow && d.value < rangeHigh) 
+                    ? highlightColor 
+                    : vis.config.colorScale(d.col);
+            });
+    }
+
+    resetFilter() {
+        let vis = this;
+        vis.chart.selectAll('.point')
+            .attr('fill', d => vis.config.colorScale(d.col));
     }
 }
 
