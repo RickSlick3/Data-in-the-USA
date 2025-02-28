@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="leading-[1.5]">
+    <div className="leading-[1.5] max-w-[1440]">
       <h1 className="text-5xl font-bold mb-4">Health is Wealth</h1>
 
       <p className='text-xs'>Documentation can also be found <a className="underline text-blue-700" href='https://github.com/RickSlick3/Data-in-the-USA' target="_blank">here</a>.</p>
