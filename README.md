@@ -4,6 +4,10 @@
 
 This web application was created to provide an interactive platform for exploring the relationship between economic status and health outcomes across U.S. counties. The dashboard allows users to navigate linked visualizations—a choropleth map, scatterplot, and histogram—that provide a multidimensional view of the data. Interactions such as hovering and clicking allow users to highlight specific counties, observe cross-visualization relations, and gain deeper insights into the distribution of data attributes. Ultimately, the application highlights the trend that counties with the lowest incomes often experience the highest rates of health issues. 
 
+Visit the publicly hosted application <a href="https://health-is-wealth-gray.vercel.app/" target="_blank"><strong>here</strong></a>.
+
+Watch the full application demonstration <a href="https://www.loom.com/share/91b07b0d3527458caec998fae96e86c2" target="_blank"><strong>here</strong></a>.
+
 ![Choropleth map displaying percent_inactive](/data-in-the-usa/public/map_sample.png)
 
 ## From Data to Insights
@@ -28,7 +32,12 @@ The full dataset can be downloaded by <a href="/data-in-the-usa/public/national_
 
 ### The Visuals and Interactivity
 
+![full dashboard](/data-in-the-usa/public/full-dashboard.png)
+
 <p>The dashboard page includes interactive legends that allow you to view different health and wealth attributes. <strong>You can change these attributes</strong> by clicking on any of the several selections provided in the health and wealth rows near the top of the page. When new selections are made, the points and/or scales will update for the selected data. Interactions are cross-linked: selecting new attributes can update one or more of the visuals, and hovering over or clicking an element in one view triggers updates in the others.</p>
+
+![interactivity example](/data-in-the-usa/public/interactive-example.png)
+
 <p>The visualization component of our application is divided into three interrelated views, each offering a different perspective on the data:</p>
 
 #### Scatterplot
@@ -99,6 +108,3 @@ This applicaton was built with the assistance of OpenAI's ChatGPT o3-mini-high a
     - In my dashboard, I decided to link my three different visualizations together interactively. ChatGPT guided me through the method I used to do this and continuously explained which functions or callbacks were connected.
 5. Styling
     -  Tailwind CSS makes styling very easy, especially when advanced styles or animations are not needed. Using Tailwind CSS to style my HTML allows easier editing with ChatGPT since I don't have to manage CSS files or worry about corresponding classes as much. 
-
-## Application Demonstration
-- Include a 2-3 minute demo video, showing your application in action.  The easiest way to record this is with a screen capture tool, which also captures audio- such as Quicktime.  Use a voiceover or video captions to explain your application.  Demo videos should be sufficient on their own, but can reference your documentation.  Include the name of the project, your name, the project components, and how your application works.  You can present it on your webpage or on youtube, but linked on your webpage. 
