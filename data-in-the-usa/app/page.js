@@ -5,8 +5,8 @@ export default function Home() {
     <div className="leading-[1.5] max-w-7xl">
       <h1 className="text-5xl font-bold mb-4">Health is Wealth</h1>
 
-      <p className='text-xs'>Documentation can also be found <a className="underline text-blue-700" href='https://github.com/RickSlick3/Data-in-the-USA' target="_blank">here</a>.</p>
-      <p className='text-xs mb-4'><strong>Preface: </strong>The dashboard was not made to be responsive to page size. The dashboard was ideally created for a screen of width 1600px, and a height of no less than 850px.</p>
+      <p className='text-s my-1'>Source code and documentation can be found at <a className="underline text-blue-700 font-bold" href='https://github.com/RickSlick3/Data-in-the-USA' target="_blank">this GitHub repository</a>.</p>
+      <p className='text-xs my-4'><strong>Preface: </strong>The dashboard was not made to be responsive to page size. The dashboard was ideally created for a screen of width 1600px, and a height of no less than 850px.</p>
 
       <p className="my-1 indent-8">This web application was created to provide an interactive platform for exploring the relationship between economic status and health outcomes across U.S. counties. The dashboard allows users to navigate linked visualizations—a choropleth map, scatterplot, and histogram—that provide a multidimensional view of the data. Interactions such as hovering and clicking allow users to highlight specific counties, observe cross-visualization relations, and gain deeper insights into the distribution of data attributes. Ultimately, the application highlights the trend that counties with the lowest incomes often experience the highest rates of health issues. </p>
       <p className="my-2 font-bold">Watch the full application demonstration <a className="underline text-blue-700" href="https://www.loom.com/share/91b07b0d3527458caec998fae96e86c2" target="_blank"><strong>here</strong></a>.</p>
@@ -22,7 +22,7 @@ export default function Home() {
         <li>2. The corresponding U.S. county and state name</li>
         <li>3. The U.S. county's recorded economic and health statistics expressed as averages and percentages of the population</li>
       </ol>
-      <p>The full dataset can be downloaded by <a className="underline text-blue-700" href="/data-in-the-usa/public/national_health_data_2024.csv" download>clicking here</a>.</p>
+      <p>The full dataset can be downloaded by <a className="underline text-blue-700" href="/national_health_data_2024.csv" download>clicking here</a>.</p>
     
       <h3 className="text-2xl font-bold my-4">Design Decisions</h3>
       <p className="my-1 indent-8">The dashboard was designed with ease-of-use and clarity in mind. The visualizations are intended to reveal more than just basic correlations and distributions.</p> 
