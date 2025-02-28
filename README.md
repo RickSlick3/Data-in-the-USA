@@ -69,7 +69,7 @@ The application enables you to uncover the complex relationship between economic
 
 ![Histogram showing distribution of high blood pressure](/data-in-the-usa/public/high-bp-histogram.png)
 
-- By clicking on bars in the histogram, the user can identify geographical trends, such as which regionshave the highest populations of smokers. 
+- By clicking on bars in the histogram, the user can identify geographical trends, such as which regions have the highest populations of smokers. 
 
 ![Map showing spatial distribution of highest smoking counties](/data-in-the-usa/public/smoking-choropleth.png)
 
