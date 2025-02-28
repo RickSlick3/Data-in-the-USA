@@ -21,7 +21,7 @@ The full dataset can be downloaded by <a href="/data-in-the-usa/public/national_
 ### Design Decisions
 
 <p>The dashboard was designed with ease-of-use and clarity in mind. The visualizations are intended to reveal more than just basic correlations and distributions.</p> 
-<p>The color green was chosen for the visuals because it represents life, growth, and health. The choropleth map employs a linear color scale—from bright green to black—to illustrate county-level differences. Black was selected because it can symbolize death or loss, aligning with the health attributes under analysis.</p> 
+<p>The color green was chosen for the visuals because it represents life, growth, health and money. The choropleth map employs a linear color scale—from bright green to black—to illustrate county-level differences. Black was selected because it can symbolize death or loss, aligning with the health attributes under analysis.</p> 
 <p>Both the scatterplot and choropleth map scales start at zero and extend to the highest observed value for each attribute. This design choice emphasizes health metrics with higher average percentages. On the choropleth map, counties rendered in lighter green indicate lower averages, while darker shades reflect higher averages.</p> 
 <p>Attributes are changed by clicking buttons rather than using a dropdown menu, enabling users to swiftly switch between attributes and observe relationships or similarities.</p> 
 <p>The choropleth map is intended as the dashboard’s primary focus. Because it is more challenging to interpret at smaller sizes, it is given the largest display area on the page. Although spatial distribution is a key aspect of the data, the other visualizations simply require less space to effectively convey their information.</p>
@@ -81,6 +81,9 @@ This project is publicly availible at https://health-is-wealth-gray.vercel.app/,
 - Problems with Interactions
     - In my development, I did not handle the state of the county selections in a sophisticated way. When clicking a bar in the histogram, switching attributes, and clicking a bar in the new histogram, some states seem to remain selected from the previous map even though they get recolored. This can lead to unintended consequences and may require the user to refresh the page to reset the selections. This should be fixed to improve user experience and maintain consistency between the visualizations. 
     - Linking these visuals was done using call-backs and adds complexity to my code for others who view it. While making these improvements, I must attempt to try and minimize the amount of call-backs and function chaining to avoid call-back hell and maintain ease of understanding. 
+
+- More Visualization of Economic Attributes
+    - There are currently two buttons above the choropleth map, median household income and poverty percent, that when clicked show the geographical distribution of the selected economic attribute. I would also like to provide this data on the histogram, use a different color on both the map and histogram to indicate that I am showing an economic attribute rather than a health attribute.
 
 ### Use of Artificial Intelligence Tools
 
